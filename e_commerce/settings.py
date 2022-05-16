@@ -26,7 +26,7 @@ SECRET_KEY = 'xp_hpnflm()c@m#c0hhgl(#!tg(6&d3jd5%y($ta-q0dfged=x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.191', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -77,8 +77,8 @@ ROOT_URLCONF = 'e_commerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'frontend' / 'navigation', BASE_DIR / 'templates'],
+        
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

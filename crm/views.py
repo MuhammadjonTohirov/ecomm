@@ -3,11 +3,6 @@ from datetime import datetime
 from django.core import serializers
 from django.http import JsonResponse
 from django.shortcuts import render
-# from django.conf import settings
-# from django.db.models.signals import post_save
-# from django.dispatch import receiver
-# from django.views.decorators.csrf import csrf_exempt
-# from rest_framework.authtoken.models import Token
 from rest_framework.serializers import Serializer
 from rest_framework.utils import json
 

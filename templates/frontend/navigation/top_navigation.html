@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Fashion Hub Ecommerce Category Bootstrap Responsive Website Template| Home :: w3layouts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="keywords" content="Fashion Hub Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+	SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola web design" />
+
+<link href="{% static 'static/theme1/css/bootstrap.css' %}" type="text/css" rel="stylesheet" media="all">
+
+<link href="{% static "static/theme1/css/shop.css" %}" type="text/css" rel="stylesheet" media="all">
+    <link rel="stylesheet" href="{% static "static/theme1/css/owl.carousel.min.css" %}">
+
+    <link href="{% static "static/theme1/css/style.css" %}" type="text/css" rel="stylesheet" media="all">
+
+    <link href="{% static "static/theme1/css/fontawesome-all.min.css" %}" rel="stylesheet">
+    
+    <link href="//fonts.googleapis.com/css?family=Elsie+Swash+Caps:400,900" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i" rel="stylesheet">
+</head>
+<body>
+    <nav class="top_nav d-flex pt-3 pb-1">
+        <!-- logo -->
+        <h1>
+            <img class="img-logo" src={% static "static/theme1/images/logo.png" %} alt="shopp.uz"/>
+            <!-- <img class="img-logo" src={% static "theme1/images/logo.png" %} alt="shopp.uz"/> -->
+        </h1>
+        <!-- //logo -->
+        <div class="w3ls_right_nav ml-auto d-flex">
+            <div class="ml-auto d-flex icon_text">
+                <img class="icon" src = {% static 'static/theme1/assets/icon_lang_globe.png'%}/>
+                <p>English</p>    
+            </div>
+    
+            <div class="ml-auto d-flex icon_text">
+                <img class="icon" src = {% static 'static/theme1/assets/icon_def_avatar.png'%}/>
+                <p>My profile</p>    
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+</body>

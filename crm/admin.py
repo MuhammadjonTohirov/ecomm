@@ -32,11 +32,17 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 admin.site.register(Person)
 
-
-# class IndividualPersonAdmin(admin.ModelAdmin):
-#     list_display = ('user', 'created_date')
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('street', 'location', 'zip_code')
 
 
 @admin.register(Bank)
 class BankAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'created_date')
+
+@admin.register(Province)
+@admin.register(Region)
+@admin.register(Country)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ('title', 'description')

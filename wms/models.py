@@ -1,9 +1,10 @@
+from tabnanny import verbose
 from django.db import models
 from django.utils import timezone
 
 from crm.models import Address, Organization, User
 from helpers import enum
-from helpers.enum import FieldType, Vat
+from helpers.enum import Currency, FieldType, Vat
 
 class ProductProperty(models.Model):
     body = models.JSONField(verbose_name='Product fields json')
@@ -70,11 +71,11 @@ class ProductCore(models.Model):
         return f'{self.title} {self.bar_qr_code}'
 
     class Meta:
-        verbose_name = 'Product'
-        verbose_name_plural = 'Products'
+        verbose_name = 'Product Core'
+        verbose_name_plural = 'Product Core'
 
 
-class Product(models.Model):
+class ProductDetails(models.Model):
     product = models.OneToOneField(to=ProductCore, verbose_name='Product', on_delete=models.CASCADE,
                                    related_name='product_core_income', default=None, blank=False, null=True,
                                    unique=True)
@@ -100,7 +101,7 @@ class Product(models.Model):
 
 
 class ProductField(models.Model):
-    product = models.ForeignKey(verbose_name='Product', to=Product, on_delete=models.CASCADE, null=True, blank=False)
+    product = models.ForeignKey(verbose_name='Product', to=ProductCore, on_delete=models.CASCADE, null=True, blank=False)
     title = models.CharField(verbose_name='Title', max_length=128)
     value = models.CharField(verbose_name='Value', max_length=2048, default='')
     field_type = models.SmallIntegerField(verbose_name='Field type', name='product_field_type',
@@ -110,8 +111,8 @@ class ProductField(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(to=ProductCore, verbose_name='Product', on_delete=models.DO_NOTHING,
                                 default=None, blank=False, null=True, related_name='product_image_product')
-    image = models.ImageField(verbose_name='Image')
-    hint = models.CharField(verbose_name='Hint', max_length=256)
+    image = models.ImageField(verbose_name='Image', upload_to='product_images/', default=None, blank=True, null=True)
+    hint = models.CharField(verbose_name='Hint', max_length=256, default=None, blank=True, null=True)
     description = models.CharField(verbose_name='Description', default=None, blank=True, max_length=1024, null=True)
 
     created_date = models.DateTimeField(verbose_name='Created date', auto_created=True, auto_now=True,
@@ -122,37 +123,26 @@ class ProductImage(models.Model):
     updated_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=True, default=None, null=True,
                                    related_name='product_image_updated_by')
 
-
-class PriceList(models.Model):
-    product = models.ForeignKey(to=Product, verbose_name='Product', on_delete=models.CASCADE, name='product',
-                                default=None, blank=False, null=True)
-    price = models.FloatField(verbose_name='Price')
-
-    currency = models.SmallIntegerField(choices=enum.Currency.__list__, default=1)
-
-    is_active = models.BooleanField(verbose_name='Activated', default=True, blank=True)
-
-    created_date = models.DateTimeField(verbose_name='Created date', auto_created=True, auto_now=True,
-                                        blank=True)
-    updated_date = models.DateTimeField(verbose_name='Updated date', blank=True, null=True)
-
-    created_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=True, default=None, null=True,
-                                   related_name='price_list_created_by')
-
-    updated_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=True, default=None, null=True,
-                                   related_name='price_list_updated_by')
-
-    def __str__(self):
-        return f'{self.product} {self.price}'
-
-
-class IncomingProduct(models.Model):
+class StockProduct(models.Model):
     product = models.ForeignKey(ProductCore, default=False, verbose_name='Product', null=False,
                                 on_delete=models.CASCADE)
+    
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.SET_NULL, null=True, blank=False, default=None)
+    reason = models.CharField(verbose_name='Income reason', max_length=1024, blank=True, null=True)
+
+    from_organization = models.ForeignKey(Organization, on_delete=models.DO_NOTHING, null=True, blank=True,
+                                          default=None, verbose_name='Origin')
+
     count = models.PositiveIntegerField(verbose_name='Quantity')
     income_price = models.FloatField(verbose_name='Income price')
     whole_price = models.FloatField(verbose_name='Whole price')
     single_price = models.FloatField(verbose_name='Single price')
+    currency = models.SmallIntegerField(choices=enum.Currency.__list__, default=1)
+
+    payment_method = models.SmallIntegerField(choices=enum.PaymentMethod.__list__, default=1)
+
+    markup = models.SmallIntegerField(verbose_name='Markup', blank=True, default=0)
+
     session = models.CharField(verbose_name='Session', max_length=128)
     income_date = models.DateField(verbose_name='Income date')
     vat = models.PositiveIntegerField(verbose_name='VAT', choices=Vat.__list__, default=1, null=False, blank=False)
@@ -167,36 +157,9 @@ class IncomingProduct(models.Model):
     updated_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=True, default=None, null=True,
                                    related_name='income_product_updated_by')
 
+    class Meta:
+        verbose_name = 'Stock'
+        verbose_name_plural = 'Stock'
+        
     def __str__(self):
         return f'{self.product} {self.session}'
-
-
-class WmsIncome(models.Model):
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.SET_NULL, null=True, blank=True, default=None)
-
-    reason = models.CharField(verbose_name='Income reason', max_length=1024, blank=True, null=True)
-
-    products = models.ManyToManyField(IncomingProduct, verbose_name='products')
-
-    from_organization = models.ForeignKey(Organization, on_delete=models.DO_NOTHING, null=True, blank=False,
-                                          default=None)
-
-    currency = models.SmallIntegerField(choices=enum.Currency.__list__, default=1)
-
-    payment_method = models.SmallIntegerField(choices=enum.PaymentMethod.__list__, default=1)
-
-    markup = models.SmallIntegerField(verbose_name='Markup', blank=True, default=0)
-
-    created_date = models.DateTimeField(verbose_name='Created date', auto_created=True, auto_now=True,
-                                        blank=True)
-
-    updated_date = models.DateTimeField(verbose_name='Updated date', blank=True, null=True)
-
-    created_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=False, default=None, null=True,
-                                   related_name='income_created_by')
-
-    updated_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=True, default=None, null=True,
-                                   related_name='income_updated_by')
-
-    def __str__(self):
-        return self.warehouse.title

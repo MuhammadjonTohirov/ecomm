@@ -27,7 +27,7 @@ class Province(models.Model):
 
 
 class Region(models.Model):
-    province = models.OneToOneField(to=Province, verbose_name='Region', on_delete=models.CASCADE, null=True, blank=True,
+    province = models.OneToOneField(to=Province, verbose_name='Province', on_delete=models.CASCADE, null=True, blank=True,
                                     default=None)
     title = models.CharField(verbose_name='Region/City name', max_length=128, unique=True)
     description = models.CharField(verbose_name='Description', max_length=1024)
@@ -38,7 +38,7 @@ class Region(models.Model):
 
 class Address(models.Model):
     street = models.CharField(verbose_name='Street', max_length=128)
-    location = models.OneToOneField(to=Region, verbose_name='Region', on_delete=models.SET_NULL, null=True,
+    location = models.ForeignKey(to=Region, verbose_name='Region', on_delete=models.SET_NULL, null=True,
                                     default=None, blank=True)
 
     zip_code = models.PositiveIntegerField(verbose_name='Zip code')
@@ -105,7 +105,9 @@ class Organization(models.Model):
     logo = models.ImageField(verbose_name='Logo', upload_to='organization_logo', blank=True, null=True)
     name = models.CharField(verbose_name='name', max_length=512, default=None, null=True, blank=False)
     description = models.CharField(verbose_name='Description', max_length=2048, default=None, null=True, blank=False)
-    bank = models.ManyToManyField(Bank, verbose_name='Bank list', related_name='company_bank_list')
+    address = models.ForeignKey(to=Address, on_delete=models.SET_NULL, default=None, blank=True, null=True,)
+    organization_type = models.SmallIntegerField(verbose_name='Organization type', choices=enum.OrganizationType.__list__, null=False, default=1, blank=True) 
+    bank = models.ManyToManyField(Bank, verbose_name='Bank list', related_name='company_bank_list', null=True, default=None, blank=True)
     belongs_to = models.ForeignKey(Person, verbose_name='Director', related_name='company_director',
                                    on_delete=models.CASCADE, null=True, blank=True, default=None)
     created_date = models.DateTimeField(verbose_name='Created date', auto_created=True, auto_now=True, blank=True)

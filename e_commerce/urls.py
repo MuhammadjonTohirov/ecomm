@@ -22,13 +22,15 @@ import sales.views as sales_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', sales_views.index, name='index'),
+    # path('', sales_views.index, name='index'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 #  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += [
+    path('', include('sales.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('crm/', include('crm.urls'))
+    path('crm/', include('crm.urls')),
+    path('sales/', include('sales.urls'))
 ]
 
 Defaults.deploy()

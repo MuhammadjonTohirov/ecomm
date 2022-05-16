@@ -19,9 +19,10 @@ class BankSerializer(serializers.ModelSerializer):
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
+    address = AddressSerializer()
     class Meta:
         model = Organization
-        fields = ('name', 'description', 'bank', 'belongs_to')
+        fields = ('name', 'description', 'address', 'organization_type', 'bank', 'belongs_to')
 
     def create(self, validated_data):
         name = validated_data.get('name')

@@ -1,4 +1,28 @@
 
+from dataclasses import field
+
+class OrganizationType:
+    ORGANIZATION = (1, 'Организация')
+    PERSON = (2, 'Физическое лицо')
+
+    @classmethod
+    def typeInfo(cls, type: int):
+        switcher = {
+            1: OrganizationType.ORGANIZATION,
+            2: OrganizationType.PERSON,
+        }
+
+        fieldType = switcher.get(type, OrganizationType.PERSON)
+
+        return {
+            'id': fieldType[0],
+            'name': fieldType[1],
+        }
+
+    __list__ = (ORGANIZATION, PERSON)
+
+
+
 class Gender:
     MALE = (1, 'Male')
     FEMALE = (2, 'Female')
@@ -10,6 +34,19 @@ class FieldType:
     TEXT = (1, 'Text')
     CURRENCY = (2, 'Currency')
     DECIMAL = (3, 'Decimal')
+    
+    @classmethod
+    def typeInfo(cls, type: int):
+        switcher = {
+            1: FieldType.TEXT,
+            2: FieldType.CURRENCY,
+            3: FieldType.DECIMAL,
+        }
+        fieldType = switcher.get(type, FieldType.TEXT)
+        return {
+            'id': fieldType[0],
+            'name': fieldType[1],
+        }
 
     __list__ = (TEXT, CURRENCY, DECIMAL)
 
