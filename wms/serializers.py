@@ -12,7 +12,7 @@ class ProductCoresSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductCore
-        fields = ('id', 'title', 'bar_qr_code', 'unit', 'description',)
+        fields = ('id', 'categories', 'title', 'bar_qr_code', 'unit', 'description',)
 
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:

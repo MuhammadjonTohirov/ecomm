@@ -6,14 +6,13 @@ class AppResponse:
     def __str__(self):
         return self.message
 
-    def unknown_error_body(self, code=101):
-        return {
-            'error': self.message,
-            'code': code,
-        }
-
-    def success_body(self, code=200):
+    def body(self):
         return {
             'success': self.message,
-            'code': code
+            'code': 200
+        }
+
+    def error_body(self):
+        return {
+            'error': self.message
         }

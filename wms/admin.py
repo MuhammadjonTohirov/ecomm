@@ -38,7 +38,7 @@ class IncomingProductAdmin(admin.ModelAdmin):
     list_display = ('product', 'warehouse', 'count', 'income_price', 'whole_price', 'single_price', 'session',)
 
 
-# @admin.register(WmsIncome)
-# class ProductIncomeAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'warehouse', 'reason', 'created_date', 'created_by')
+@admin.register(ProductCategory)
+class ProductCategoryAdmin(admin.ModelAdmin):
+    list_display = ('title', 'description', 'image')
 

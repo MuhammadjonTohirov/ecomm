@@ -1,8 +1,13 @@
 from django.utils import timezone
 from rest_framework import serializers
 
-from crm.models import Profile, Bank, Address, Organization
+from crm.models import Profile, Bank, Address, Organization, User
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email',
+                  'first_name', 'last_name', 'is_active']
 
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:

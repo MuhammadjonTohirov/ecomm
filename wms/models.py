@@ -29,11 +29,16 @@ class Warehouse(models.Model):
 
 class ProductCategory(models.Model):
     title = models.CharField(verbose_name='Title', max_length=128, default=None, blank=False, null=True)
+    image = models.ImageField(verbose_name='Image', upload_to='images/icons/', blank=True, null=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, default=None)
     description = models.CharField(verbose_name='Description', max_length=512, default=None, blank=True, null=True)
-
+    
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = 'Product category'
+        verbose_name_plural = 'Product categories'
 
 class ProductUnit(models.Model):
     title = models.CharField(verbose_name='Title', max_length=24, default=None, blank=False, null=True)
@@ -54,7 +59,7 @@ class ProductCore(models.Model):
     unit = models.ForeignKey(to=ProductUnit, blank=False, default=None, null=True, verbose_name='Product unit',
                              on_delete=models.SET_NULL)
 
-    categories = models.ManyToManyField(to=ProductCategory, verbose_name='Category')
+    categories = models.ManyToManyField(to=ProductCategory, verbose_name='Category', blank=True, default=None, related_name='categories')
 
     created_date = models.DateTimeField(verbose_name='Created date', auto_created=True, auto_now=True,
                                         blank=True)

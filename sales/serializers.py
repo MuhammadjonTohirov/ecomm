@@ -5,8 +5,19 @@ from django.core import serializers as django_serializers
 from django.forms.models import model_to_dict
 from helpers.enum import FieldType
 
-from wms.models import ProductDetails, ProductField, ProductImage, StockProduct
-from wms.serializers import ProductCoresSerializer, ProductImageSerializer
+from wms.models import ProductCategory, ProductField, ProductImage, StockProduct
+from wms.serializers import ProductCoresSerializer
+
+class ProductCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductCategory
+        fields = ('id', 'title', 'description', 'image', 'parent')
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        subs = ProductCategorySerializer(ProductCategory.objects.filter(parent=data['id']), many=True)
+        data['subcategories'] = subs.data
+        return data
 
 class ProductSerializer(serializers.ModelSerializer):
     product = ProductCoresSerializer()
