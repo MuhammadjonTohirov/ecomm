@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from helpers.responses import AppResponse
 from sales.serializers import ProductCategorySerializer, ProductSerializer
-from wms.models import ProductCategory, ProductDetails, StockProduct
+from wms.models import ProductCategory, StockProduct
 from rest_framework import viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated

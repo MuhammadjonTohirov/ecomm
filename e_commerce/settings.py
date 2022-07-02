@@ -27,8 +27,8 @@ REFRESH_TOKEN_SECRET = 'xp_hpnflm()c@m#c0hhgl(#!tg(6&d3jd5%y($ta-q0dfged=y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.191', 'localhost', '127.0.0.1', '0.0.0.0', '192.168.1.64']
-
+ALLOWED_HOSTS = ['192.168.1.68', 'localhost', '127.0.0.1', '0.0.0.0', '192.168.1.64']
+# 192.168.1.68
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'rest_framework',
     # 'rest_framework.authtoken',
 ]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 DJANGO_SETTINGS_MODULE = 'crm.serializers'
 

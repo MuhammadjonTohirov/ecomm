@@ -72,6 +72,11 @@ class Defaults:
             'description': 'Santi meter'
         })
 
+        ProductUnit.objects.update_or_create(title='Bag', defaults={
+            'description': 'Bag, Sac'
+        })
+
+
         ProductUnit.objects.update_or_create(title='Box', defaults={
             'description': ''
         })

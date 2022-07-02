@@ -67,7 +67,8 @@ class Vat:
 
 
 class PaymentMethod:
-    in_cash = (0, 'Cash')
-    transfer = (1, 'Transfer money')
+    any = (0, 'All')
+    in_cash = (1, 'Cash')
+    transfer = (2, 'Transfer money')
 
-    __list__ = (in_cash, transfer)
+    __list__ = (any, in_cash, transfer)

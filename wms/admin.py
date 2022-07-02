@@ -11,7 +11,8 @@ class ProductFieldInline(admin.TabularInline):
     can_delete = True
     verbose_name_plural = 'Field list'
     extra: int = 1
-    max_num: int = 5
+    max_num: int = 20
+    fields = ('title', 'value', 'visible', 'product_field_type')
     fk_name = 'product'
 
 class ProductImageInline(admin.TabularInline):
@@ -25,20 +26,24 @@ class ProductImageInline(admin.TabularInline):
 @admin.register(ProductCore)
 class ProductCoreInline(admin.ModelAdmin):
     inlines = (ProductImageInline, ProductFieldInline)
-    list_display = ('title', 'bar_qr_code',)
+    list_display = ('title', 'bar_qr_code')
 
-
-@admin.register(ProductDetails)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'product')
+class StockProductExtraFieldsInline(admin.TabularInline):
+    model = StockProductExtraFields
+    can_delete = True
+    extra: int = 1
+    max_num: int = 20
+    verbose_name_plural = 'Extra field list'
+    show_change_link = True
+    fk_name = 'product'
 
 
 @admin.register(StockProduct)
 class IncomingProductAdmin(admin.ModelAdmin):
+    inlines = (StockProductExtraFieldsInline,)
     list_display = ('product', 'warehouse', 'count', 'income_price', 'whole_price', 'single_price', 'session',)
 
 
 @admin.register(ProductCategory)
 class ProductCategoryAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'image')
-

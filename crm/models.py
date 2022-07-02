@@ -85,8 +85,6 @@ class Person(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='User',
                                 related_name='person_user', null=True, blank=True, default=None, unique=True)
 
-    bank = models.ManyToManyField(Bank, verbose_name='Bank list', related_name='p_bank_list')
-
     created_date = models.DateTimeField(verbose_name='Created date', auto_created=True, auto_now=True,
                                         blank=True)
     updated_date = models.DateTimeField(verbose_name='Updated date', blank=True, null=True)
@@ -102,14 +100,13 @@ class Person(models.Model):
 
 
 class Organization(models.Model):
-    logo = models.ImageField(verbose_name='Logo', upload_to='organization_logo', blank=True, null=True)
-    name = models.CharField(verbose_name='name', max_length=512, default=None, null=True, blank=False)
+    logo = models.ImageField(verbose_name='Logo', upload_to='organization_logo', blank=False, null=True)
+    name = models.CharField(verbose_name='name', max_length=512, default=None, null=True, blank=False, unique=True)
     description = models.CharField(verbose_name='Description', max_length=2048, default=None, null=True, blank=False)
     address = models.ForeignKey(to=Address, on_delete=models.SET_NULL, default=None, blank=True, null=True,)
     organization_type = models.SmallIntegerField(verbose_name='Organization type', choices=enum.OrganizationType.__list__, null=False, default=1, blank=True) 
-    bank = models.ManyToManyField(Bank, verbose_name='Bank list', related_name='company_bank_list', null=True, default=None, blank=True)
-    belongs_to = models.ForeignKey(Person, verbose_name='Director', related_name='company_director',
-                                   on_delete=models.CASCADE, null=True, blank=True, default=None)
+    bank = models.ManyToManyField(Bank, verbose_name='Bank list', related_name='company_bank_list', default=None, blank=True)
+    belongs_to = models.ForeignKey(Person, verbose_name='Director', related_name='company_director', on_delete=models.CASCADE, null=True, blank=True, default=None)
     created_date = models.DateTimeField(verbose_name='Created date', auto_created=True, auto_now=True, blank=True)
     updated_date = models.DateTimeField(verbose_name='Updated date', blank=True, null=True)
 

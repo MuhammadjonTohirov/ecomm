@@ -53,7 +53,7 @@ class ProductCore(models.Model):
 
     description = models.CharField(verbose_name='Description', default=None, blank=True, max_length=1024, null=True)
 
-    bar_qr_code = models.CharField(verbose_name='Product code', default=None, blank=False, max_length=256, null=True,
+    bar_qr_code = models.CharField(verbose_name='Product code', default=None, blank=True, max_length=256, null=True,
                                    unique=True)
 
     unit = models.ForeignKey(to=ProductUnit, blank=False, default=None, null=True, verbose_name='Product unit',
@@ -73,44 +73,25 @@ class ProductCore(models.Model):
                                    related_name='product_updated_by')
 
     def __str__(self):
-        return f'{self.title} {self.bar_qr_code}'
+        # short if else
+        br_code = f'- {self.bar_qr_code}' if self.bar_qr_code is not None else ''
+        return f'{self.title} - {self.unit} {br_code}'
 
     class Meta:
         verbose_name = 'Product Core'
-        verbose_name_plural = 'Product Core'
-
-
-class ProductDetails(models.Model):
-    product = models.OneToOneField(to=ProductCore, verbose_name='Product', on_delete=models.CASCADE,
-                                   related_name='product_core_income', default=None, blank=False, null=True,
-                                   unique=True)
-
-    description = models.CharField(max_length=2048, verbose_name='Description', default='')
-
-    created_date = models.DateTimeField(verbose_name='Created date', auto_created=True, auto_now=True,
-                                        blank=True)
-
-    updated_date = models.DateTimeField(verbose_name='Updated date', blank=True, null=True)
-
-    created_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=False, default=None, null=True,
-                                   related_name='product_core_created_by')
-
-    updated_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=True, default=None, null=True,
-                                   related_name='product_core_updated_by')
-
-    def __str__(self):
-        return f'{self.product}'
-
-    class Meta:
-        verbose_name = 'Product detail'
-
+        verbose_name_plural = 'Product List'
+        
 
 class ProductField(models.Model):
-    product = models.ForeignKey(verbose_name='Product', to=ProductCore, on_delete=models.CASCADE, null=True, blank=False)
-    title = models.CharField(verbose_name='Title', max_length=128)
+    product = models.ForeignKey(verbose_name='Product', to=ProductCore, on_delete=models.CASCADE, null=True, blank=False, related_name='product_core')
+    title = models.CharField(verbose_name='key', max_length=128, blank=False, default=None, null=True)
     value = models.CharField(verbose_name='Value', max_length=2048, default='')
+    visible = models.BooleanField(verbose_name='Visible', default=True, blank=False, null=False)
     field_type = models.SmallIntegerField(verbose_name='Field type', name='product_field_type',
                                           choices=FieldType.__list__, default=1, null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.product.title} - {self.title}'
 
 
 class ProductImage(models.Model):
@@ -128,6 +109,22 @@ class ProductImage(models.Model):
     updated_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=True, default=None, null=True,
                                    related_name='product_image_updated_by')
 
+    class Meta:
+        verbose_name = 'Product image'
+        verbose_name_plural = 'Product images'
+
+    def __str__(self) -> str:
+        return f'Image - {self.image.name}'
+
+class StockProductExtraFields(models.Model):
+    product = models.ForeignKey(verbose_name='StockProduct', to='StockProduct', on_delete=models.CASCADE, null=True, blank=False, related_name='stock_product_extra_fields')
+    title = models.CharField(verbose_name='Title', max_length=128, default=None, blank=False, null=True)
+    value = models.CharField(verbose_name='Value', max_length=2048, default='', blank=True, null=False)
+
+    class Meta:
+        verbose_name = 'Product extra field'
+        verbose_name_plural = 'Product extra fields'
+
 class StockProduct(models.Model):
     product = models.ForeignKey(ProductCore, default=False, verbose_name='Product', null=False,
                                 on_delete=models.CASCADE)
@@ -139,8 +136,8 @@ class StockProduct(models.Model):
                                           default=None, verbose_name='Origin')
 
     count = models.PositiveIntegerField(verbose_name='Quantity')
-    income_price = models.FloatField(verbose_name='Income price')
-    whole_price = models.FloatField(verbose_name='Whole price')
+    income_price = models.FloatField(verbose_name='Income price', blank=True, default=None, null=True)
+    whole_price = models.FloatField(verbose_name='Whole price', blank=True, default=None, null=True)
     single_price = models.FloatField(verbose_name='Single price')
     currency = models.SmallIntegerField(choices=enum.Currency.__list__, default=1)
 
@@ -150,7 +147,7 @@ class StockProduct(models.Model):
 
     session = models.CharField(verbose_name='Session', max_length=128)
     income_date = models.DateField(verbose_name='Income date')
-    vat = models.PositiveIntegerField(verbose_name='VAT', choices=Vat.__list__, default=1, null=False, blank=False)
+    vat = models.PositiveIntegerField(verbose_name='VAT', choices=Vat.__list__, default=1, null=False, blank=True)
     created_date = models.DateTimeField(verbose_name='Created date', auto_created=True, auto_now=True,
                                         blank=True)
 
@@ -163,8 +160,8 @@ class StockProduct(models.Model):
                                    related_name='income_product_updated_by')
 
     class Meta:
-        verbose_name = 'Stock'
-        verbose_name_plural = 'Stock'
+        verbose_name = 'Product income transaction'
+        verbose_name_plural = 'Product income transactions'
         
     def __str__(self):
         return f'{self.product} {self.session}'

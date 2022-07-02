@@ -37,9 +37,10 @@ class ProductSerializer(serializers.ModelSerializer):
                 'title': field['title'],
                 'type': FieldType.typeInfo(field['product_field_type']),
                 'value': field['value'],
+                'visible': field['visible']
             }
 
-        data['fields'] = fields.values('title', 'value', 'product_field_type')
+        data['fields'] = fields.values('title', 'value', 'product_field_type', 'visible')
 
         data['fields'] = map(update_fild_type, data['fields'])
         return  data
