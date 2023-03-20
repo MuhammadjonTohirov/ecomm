@@ -1,0 +1,27 @@
+{% load i18n %}
+<div class="sticky nav-sidebar" id="toggle-nav-sidebar" aria-label="{% translate 'Toggle navigation' %}"> </div>
+<nav class="sticky" id="nav-sidebar">
+  {% comment %} <input type="search" id="nav-filter" placeholder="{% translate 'Start typing to filter…' %}" 
+        aria-label="{% translate 'Filter navigation items' %}"> {% endcomment %}
+  {% include 'frontend/sidebar/company_info.html'%}
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">
+        <img src="https://cdn-icons-png.flaticon.com/128/1828/1828673.png" alt="Home" width="30" height="30">
+        <span class="title">Home</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">
+        <img src="your-image-url" alt="Contact Us" width="30" height="30">
+        <span class="title">Contact Us</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">
+        <img src="your-image-url" alt="About Us" width="30" height="30">
+        <span class="title">About Us</span>
+      </a>
+    </li>
+  </ul>
+</nav>

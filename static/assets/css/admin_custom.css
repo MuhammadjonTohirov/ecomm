@@ -1,0 +1,13 @@
+/* Hide the original checkbox */
+.action-checkbox {
+    display: none;
+}
+
+/* Show the new checkbox if the delete-checkbox span is inside a row with an input:checked */
+tr .delete-checkbox {
+    display: none;
+}
+
+tr input:checked ~ .delete-checkbox {
+    display: block;
+}

@@ -1,0 +1,28 @@
+-- create table wms_stockpoint3 (
+--     id PRIMARY KEY,
+--     title TEXT,
+--     `description` TEXT,
+--     `address` INT,
+--     assigned_director INT,
+--     belongs_to INT,
+--     created_date TEXT,
+--     updated_date TEXT,
+--     created_by INT,
+--     updated_by INT
+-- );
+alter table wms_stockproduct rename column stockpoint3_id to stock_point_id;
+select * from wms_stockproduct;
+-- insert into wms_stockpoint3 (id) VALUES(2);
+
+    -- title = models.CharField(verbose_name='Stock Point', max_length=512, blank=False, null=True, default=None)
+    -- description = models.CharField(verbose_name='Description', max_length=1024, blank=True, null=True, default=None)
+    -- address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, default=None, blank=True)
+    -- assigned_director = models.ForeignKey(to=Profile, on_delete=models.SET_NULL, blank=True, default=None, null=True, related_name='stock_point_assigned_director')
+    -- belongs_to = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, default=None, blank=False)
+    -- created_date = models.DateTimeField(verbose_name='Created date', auto_created=True, auto_now=True,
+    --                                     blank=True)
+    -- updated_date = models.DateTimeField(verbose_name='Updated date', blank=True, null=True)
+    -- created_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=False, default=None, null=True,
+    --                                related_name='wms_created_by')
+    -- updated_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=True, default=None, null=True,
+    --                                related_name='wms_updated_by')

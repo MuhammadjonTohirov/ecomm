@@ -8,7 +8,7 @@ class AppResponse:
 
     def body(self):
         return {
-            'success': self.message,
+            'data': self.message,
             'code': 200
         }
 

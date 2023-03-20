@@ -1,7 +1,10 @@
 from django.utils import timezone
 from rest_framework import serializers
+from crm.models.organization import Organization
+from crm.models.User import User
 
-from crm.models import Profile, Bank, Address, Organization, User
+from crm.models.models import AppConfig, OrganizationAddress, Bank, Address, Region
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,10 +12,31 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email',
                   'first_name', 'last_name', 'is_active']
 
+
 class AddressSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Address
-        fields = '__all__'
+        fields = ('street', 'location', 'zip_code')
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['location'] = Region.objects.get(
+            id=instance.location.id).__str__()
+        return data
+
+
+class OrganizationAddressSerializer(serializers.ModelSerializer):
+    address = AddressSerializer(many=False)
+
+    class Meta:
+        model = OrganizationAddress
+        fields = ('id', 'address', 'longitude', 'latitude')
+
+    def to_representation(self, instance: OrganizationAddress):
+        data: OrganizationAddress = super().to_representation(instance)
+        data['address'] = f'{instance.building_number}, {Address.objects.get(id=instance.address.id).__str__()}'
+        return data
 
 
 class BankSerializer(serializers.ModelSerializer):
@@ -24,10 +48,10 @@ class BankSerializer(serializers.ModelSerializer):
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
-    address = AddressSerializer()
     class Meta:
         model = Organization
-        fields = ('name', 'description', 'address', 'organization_type', 'bank', 'belongs_to')
+        fields = ('id', 'name', 'description', 'logo', 'bannerImage', 'tint_color',
+                  'organization_type', 'bank', 'belongs_to')
 
     def create(self, validated_data):
         name = validated_data.get('name')
@@ -41,28 +65,18 @@ class OrganizationSerializer(serializers.ModelSerializer):
                                     description=description,
                                     bank_list=[], director=director)
 
-        # Profile.objects.create(user=user, **profile_data)
         return user
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
 
-class ProfileSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField(source="user.first_name")
-    last_name = serializers.CharField(source="user.last_name")
-    email = serializers.CharField(source="user.email")
+        data['address'] = OrganizationAddressSerializer(
+            instance.organization_address, many=False).data
+        return data
 
-    # position_name = serializers.CharField(source="position")
-    # is_active = serializers.BooleanField(source="user.is_active")
-    # is_superuser = serializers.BooleanField(source="user.is_superuser")
-    # last_login = serializers.DateTimeField(source="user.last_login", format="%d.%m.%Y %H:%M:%S")
+
+class AppConfigSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Profile
-        fields = ('id',
-                  'first_name',
-                  'last_name', 'email')
-        # 'email',
-        # 'position_name',
-        # 'middle_name',
-        # 'is_active',
-        # 'is_superuser',
-        # 'last_login')
+        model = AppConfig
+        fields = '__all__'

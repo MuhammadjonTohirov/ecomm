@@ -3,9 +3,12 @@ from django.utils import timezone
 from rest_framework import serializers
 from django.core import serializers as django_serializers
 from django.forms.models import model_to_dict
-from helpers.enum import FieldType
+from wms.models.product_category import ProductCategory
 
-from wms.models import ProductCategory, ProductField, ProductImage, StockProduct
+from wms.models.stock_product import StockProduct
+from .models.news import News
+
+from wms.models.product_field import ProductField
 from wms.serializers import ProductCoresSerializer
 
 class ProductCategorySerializer(serializers.ModelSerializer):
@@ -28,14 +31,13 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        images = ProductImage.objects.filter(product=instance.product)
+        # images = ProductImage.objects.filter(product=instance.product)
         fields = ProductField.objects.filter(product=instance.product)
-        data['images'] = images.values('image', 'hint', 'description')
-        
+        # data['images'] = images.values('image', 'hint', 'description')
         def update_fild_type(field):
             return {
                 'title': field['title'],
-                'type': FieldType.typeInfo(field['product_field_type']),
+                'type': field['product_field_type'],
                 'value': field['value'],
                 'visible': field['visible']
             }
@@ -45,3 +47,18 @@ class ProductSerializer(serializers.ModelSerializer):
         data['fields'] = map(update_fild_type, data['fields'])
         return  data
         
+
+class NewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = ('id', 'title', 'description', 'image', 'is_active_until', 'is_visible')
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        if data['is_visible'] is False:
+            del data['title']
+            del data['description']
+            del data['image']
+            del data['is_active_until']
+        return data

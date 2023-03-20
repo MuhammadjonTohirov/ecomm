@@ -9,13 +9,13 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+from corsheaders.defaults import default_headers
 import os
 from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https ://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -27,7 +27,8 @@ REFRESH_TOKEN_SECRET = 'xp_hpnflm()c@m#c0hhgl(#!tg(6&d3jd5%y($ta-q0dfged=y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.68', 'localhost', '127.0.0.1', '0.0.0.0', '192.168.1.64']
+ALLOWED_HOSTS = ['192.168.1.69', 'localhost',
+                 '127.0.0.1', '0.0.0.0', '192.168.1.64']
 # 192.168.1.68
 # Application definition
 
@@ -38,12 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
     'corsheaders',
     'crm',
     'sales',
     'wms',
     'rest_framework',
-    # 'rest_framework.authtoken',
+    'drf_yasg',
+    'bootstrap4',
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -58,6 +61,8 @@ REST_FRAMEWORK = {
         'crm.authentication.SafeJWTAuthentication',
 
     ],
+
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'crm.authentication.SafeJWTAuthentication',
@@ -79,10 +84,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'crm.models.base_model.ThreadLocalsMiddleware',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
+    "http://192.168.1.68:8000",
+    "http://192.168.1.69:8081",
 ]
 
 # CORS_ALLOW_METHODS = [
@@ -107,7 +115,6 @@ CORS_ALLOWED_ORIGINS = [
 #     "*",
 # ]
 
-from corsheaders.defaults import default_headers
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', '*'
@@ -118,8 +125,8 @@ ROOT_URLCONF = 'e_commerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'frontend' / 'navigation', BASE_DIR / 'templates'],
-        
+        'DIRS': [BASE_DIR / 'templates'],
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,13 +134,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static'
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'e_commerce.wsgi.application'
-
 
 # SIMPLE_JWT = {
 #     'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
@@ -221,14 +228,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'templates'),
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static/theme2")] #, os.path.join(BASE_DIR, "static/theme1")
 
-STATIC_ROOT = 'templates/static'  #os.path.join(BASE_DIR, 'static'),
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 AUTH_USER_MODEL = 'crm.User'

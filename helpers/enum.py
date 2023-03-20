@@ -29,28 +29,6 @@ class Gender:
 
     __list__ = (MALE, FEMALE)
 
-
-class FieldType:
-    TEXT = (1, 'Text')
-    CURRENCY = (2, 'Currency')
-    DECIMAL = (3, 'Decimal')
-    
-    @classmethod
-    def typeInfo(cls, type: int):
-        switcher = {
-            1: FieldType.TEXT,
-            2: FieldType.CURRENCY,
-            3: FieldType.DECIMAL,
-        }
-        fieldType = switcher.get(type, FieldType.TEXT)
-        return {
-            'id': fieldType[0],
-            'name': fieldType[1],
-        }
-
-    __list__ = (TEXT, CURRENCY, DECIMAL)
-
-
 class Currency:
     SUM = (1, 'Sum')
     DOLLAR = (2, 'Dollar')
@@ -72,3 +50,12 @@ class PaymentMethod:
     transfer = (2, 'Transfer money')
 
     __list__ = (any, in_cash, transfer)
+    
+class CoreEmployeeType:
+    DIRECTOR = (1, 'Director')
+    MANAGER = (2, 'Manager')
+    HR = (3, 'HR')
+    ACCOUNTANT = (4, 'Accountant')
+    
+    __list__ = (DIRECTOR, MANAGER, HR, ACCOUNTANT)
+    
