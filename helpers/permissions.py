@@ -133,7 +133,7 @@ class ModelPermission:
 class PermissionManager:
     def defaultPermissionForBusinessUser(self, user_id):
         modelPermission = ModelPermission(user_id)
-
+        
         def crudFor(model):
             modelPermission.add(model)
             modelPermission.view(model)
@@ -156,8 +156,7 @@ class PermissionManager:
         crudFor(order.Order)
         crudFor(Role)
         crudFor(EmployeeCareerLog)
-        crudFor(UserConfig)
-        
+    
     def defaultPermissionForSimpleUser(self, user_id):
         modelPermission = ModelPermission(user_id)
         modelPermission.clear_all_permissions()

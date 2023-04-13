@@ -42,7 +42,7 @@ class IncomingProductAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'stock_point' and not request.user.is_superuser:
             kwargs['queryset'] = StockPoint3.objects.filter(
-                belongs_to__belongs_to__user=request.user.id)
+                belongs_to__owner__user=request.user.id)
 
         if db_field.name == 'discount' and not request.user.is_superuser:
             kwargs['queryset'] = Discount.objects.filter(
@@ -55,4 +55,4 @@ class IncomingProductAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             return qs
 
-        return qs.filter(stock_point__belongs_to__belongs_to__user=request.user.id)
+        return qs.filter(stock_point__belongs_to__owner__user=request.user.id)

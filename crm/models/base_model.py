@@ -34,12 +34,3 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
-
-    # def save(self, *args, **kwargs):
-    #     user = get_current_user()
-    #     if not self.id:
-    #         # Newly created object, so set created_by
-    #         self.created_by = user
-    #     # Always update updated_by
-    #     self.updated_by = user
-    #     super(BaseModel, self).save(*args, **kwargs)
