@@ -19,7 +19,6 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 # Create your views here.
 
-
 def index(request):
     # get query parameters
     params = request.GET
@@ -30,11 +29,9 @@ def index(request):
     organization = Organization.objects.get(id=id)
     return render(request, 'frontend/index/index.html', context={'is_nav_sidebar_enabled': True, 'organization': organization})
 
-def index_2(request):
+def dashboard(request):
     # get query parameters
-
     return render(request, 'new/home/index.html')
-
 
 
 def other(request):

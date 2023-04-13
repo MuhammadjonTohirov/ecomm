@@ -1,9 +1,6 @@
 from django.db import models
 from crm.models.base_model import BaseModel
-from crm.models.OrganizationEmployee import OrganizationEmployee
 from crm.models.User import User
-
-from helpers import enum
 
 
 class AppConfig(models.Model):

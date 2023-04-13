@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 from crm.models.User import User
 from crm.models.User import User
-from crm.models.OrganizationEmployee import OrganizationEmployee
+from crm.models.employee import OrganizationEmployee
 
 from crm.models.models import *
 

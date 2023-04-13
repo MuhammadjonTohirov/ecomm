@@ -24,12 +24,14 @@
       </div>
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a href="{% url 'login' %}" class="nav-link">
+          <a href="{% url login %}" class="nav-link">
             <span class="nav-link-inner--text">Login</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'register' %}" class="nav-link">
+          {% comment %} use register in <a/> tag  {% endcomment %}
+          
+          <a href="{% url register %}" class="nav-link">
             <span class="nav-link-inner--text">Register</span>
           </a>
         </li>

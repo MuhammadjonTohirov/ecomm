@@ -27,7 +27,7 @@ REFRESH_TOKEN_SECRET = 'xp_hpnflm()c@m#c0hhgl(#!tg(6&d3jd5%y($ta-q0dfged=y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.69', 'localhost',
+ALLOWED_HOSTS = ['192.168.1.69', 'localhost', '192.168.1.139',
                  '127.0.0.1', '0.0.0.0', '192.168.1.64']
 # 192.168.1.68
 # Application definition
@@ -85,12 +85,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'crm.models.base_model.ThreadLocalsMiddleware',
+    'e_commerce.views.LoginRequiredMiddleware',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
-    "http://192.168.1.68:8000",
-    "http://192.168.1.69:8081",
+    "http://192.168.1.139:8000",
+    "http://192.168.1.69:8000",
 ]
 
 # CORS_ALLOW_METHODS = [
@@ -227,6 +228,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static/theme2")] #, os.path.join(BASE_DIR, "static/theme1")
 

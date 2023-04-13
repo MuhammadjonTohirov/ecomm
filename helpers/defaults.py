@@ -53,20 +53,29 @@ class Defaults:
 
     @classmethod
     def init_roles(cls):
-        accountant = CoreEmployeeType.ACCOUNTANT
-        director = CoreEmployeeType.DIRECTOR
-        manager = CoreEmployeeType.MANAGER
+        accountant = CoreEmployeeType.ACCOUNTANT.title
+        director = CoreEmployeeType.DIRECTOR.title
+        manager = CoreEmployeeType.MANAGER.title
+        hr = CoreEmployeeType.HR.title.upper()
         
-        Role.objects.update_or_create(title=manager[1], defaults={
+        Role.objects.update_or_create(title=manager, defaults={
             'description': 'Manager role',
+            'created_by': User.objects.filter(is_superuser=True).first()
         })
 
-        Role.objects.update_or_create(title=accountant[1], defaults={
+        Role.objects.update_or_create(title=accountant, defaults={
             'description': 'Accountant role',
+            'created_by': User.objects.filter(is_superuser=True).first()
         })
         
-        Role.objects.update_or_create(title=director[1], defaults={
+        Role.objects.update_or_create(title=director, defaults={
             'description': 'Director role',
+            'created_by': User.objects.filter(is_superuser=True).first()
+        })
+        
+        Role.objects.update_or_create(title=hr, defaults={
+            'description': 'HR role',
+            'created_by': User.objects.filter(is_superuser=True).first()
         })
 
     @classmethod

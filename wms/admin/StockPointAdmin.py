@@ -17,16 +17,16 @@ class StockPointAdmin(admin.ModelAdmin):
         return format_html(f"<a href='{url}' target = '_blank'>{self._address(obj)}</a>", url=url)
 
     # get queryset related to user
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        if request.user.is_superuser:
-            return qs
+    # def get_queryset(self, request):
+    #     qs = super().get_queryset(request)
+    #     if request.user.is_superuser:
+    #         return qs
 
-        return qs.filter(belongs_to__belongs_to__user=request.user.id)
+    #     return qs.filter(belongs_to__belongs_to__user=request.user.id)
 
     # has add permission
-    def has_add_permission(self, request):
-        if request.user.is_superuser:
-            return True
+    # def has_add_permission(self, request):
+    #     if request.user.is_superuser:
+    #         return True
 
-        return StockPoint3.objects.filter(belongs_to__belongs_to__user=request.user.id).count() < 1
+    #     return StockPoint3.objects.filter(belongs_to__belongs_to__user=request.user.id).count() < 1

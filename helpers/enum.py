@@ -1,5 +1,6 @@
 
 from dataclasses import field
+from enum import Enum
 
 class OrganizationType:
     ORGANIZATION = (1, 'Организация')
@@ -51,11 +52,50 @@ class PaymentMethod:
 
     __list__ = (any, in_cash, transfer)
     
-class CoreEmployeeType:
-    DIRECTOR = (1, 'Director')
-    MANAGER = (2, 'Manager')
-    HR = (3, 'HR')
-    ACCOUNTANT = (4, 'Accountant')
+class CoreEmployeeType(Enum):
+    DIRECTOR = 'Director'
+    MANAGER = 'Manager'
+    HR = 'HR'
+    ACCOUNTANT = 'Accountant'
     
     __list__ = (DIRECTOR, MANAGER, HR, ACCOUNTANT)
+    
+    @property
+    def title(self) -> str:
+        return self.value.title().upper()
+
+    @property
+    def level(self) -> int:
+        switcher = {
+            CoreEmployeeType.DIRECTOR: 10,
+            CoreEmployeeType.MANAGER: 9,
+            CoreEmployeeType.HR: 8,
+            CoreEmployeeType.ACCOUNTANT: 7,
+        }
+        
+        return switcher.get(self, 0)
+    
+    @staticmethod
+    def get_employee_type_by_title(title: str) -> Enum:
+        switcher = {
+            CoreEmployeeType.DIRECTOR.title: CoreEmployeeType.DIRECTOR,
+            CoreEmployeeType.MANAGER.title: CoreEmployeeType.MANAGER,
+            CoreEmployeeType.HR.title: CoreEmployeeType.HR,
+            CoreEmployeeType.ACCOUNTANT.title: CoreEmployeeType.ACCOUNTANT,
+        }
+        
+        return switcher.get(title, None)
+    
+
+class PermissionType(Enum):
+    ADD = 1
+    VIEW = 2
+    DELETE = 3
+    CHANGE = 4
+    
+    @property
+    def title(self):
+        return self.name.title().lower()
+    
+    
     

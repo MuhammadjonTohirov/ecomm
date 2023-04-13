@@ -520,6 +520,10 @@ License - nucleoapp.com/license/
     content: "\ea59";
 }
 
+.ni-home::before {
+    content: "\ea66";
+}
+
 .ni-umbrella-13::before {
     content: "\ea5a";
 }

@@ -1,8 +1,11 @@
+from ast import List, Tuple
 from django.contrib.auth.models import ContentType, Permission
+from crm.models.employee_role import Role
 from crm.models.organization import Organization
-from crm.models.OrganizationEmployee import OrganizationEmployee
+from crm.models.employee import EmployeeCareerLog, OrganizationEmployee
 
 from crm.models.User import User
+from helpers.enum import PermissionType
 from sales.models import cart, news, order
 from wms.models.Color import Color
 from wms.models.Discount import Discount
@@ -73,6 +76,7 @@ class ModelPermission:
             codename='view_' + model_name._meta.model_name,
             content_type=content_type,
         )
+        
         return self.user.user_permissions.filter(id__in=[change_permission.id, delete_permission.id, view_permission.id, add_permission.id])
 
     def has_permission(self, model_name, permission):
@@ -97,6 +101,33 @@ class ModelPermission:
 
     def has_view_permission(self, model_name):
         return self.has_permission(model_name, 'view')
+    
+    def has_permission_on(self, model_name, type: PermissionType) -> bool:
+        self.has_permission(model_name, type.title)
+        
+    def add_permission_on(self, model_name, type: PermissionType):
+        content_type = ContentType.objects.get_for_model(model_name)
+        permission = Permission.objects.get(
+            codename=type.title + '_' + model_name._meta.model_name,
+            content_type=content_type,
+        )
+        self.user.user_permissions.add(permission)
+        
+    def add_permissions_on(self, model_name, types: tuple):
+        for type in types:
+            self.add_permission_on(model_name, type)
+        
+    def delete_permission_on(self, model_name, type: PermissionType):
+        content_type = ContentType.objects.get_for_model(model_name)
+        permission = Permission.objects.get(
+            codename=type.title + '_' + model_name._meta.model_name,
+            content_type=content_type,
+        )
+        self.user.user_permissions.remove(permission)
+    
+    def delete_permissions_on(self, model_name, types: tuple):
+        for type in types:
+            self.delete_permission_on(model_name, type)
 
 
 class PermissionManager:
@@ -107,6 +138,7 @@ class PermissionManager:
             modelPermission.add(model)
             modelPermission.view(model)
             modelPermission.edit(model)
+            modelPermission.delete(model)
 
         crudFor(Organization)
         crudFor(OrganizationEmployee)
@@ -122,7 +154,40 @@ class PermissionManager:
         crudFor(cart.Cart)
         crudFor(news.News)
         crudFor(order.Order)
-
+        crudFor(Role)
+        crudFor(EmployeeCareerLog)
+        crudFor(UserConfig)
+        
     def defaultPermissionForSimpleUser(self, user_id):
         modelPermission = ModelPermission(user_id)
         modelPermission.clear_all_permissions()
+    
+    # def hrPermission(self, user_id):
+    #     modelPermission = ModelPermission(user_id)
+    #     modelPermission.clear_all_permissions()
+    #     modelPermission.add_permissions_on(OrganizationEmployee, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD))
+    #     modelPermission.add_permissions_on(Organization, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD))
+    #     modelPermission.add_permissions_on(Role, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD))
+    #     modelPermission.add_permissions_on(EmployeeCareerLog, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD))
+        
+    # def removeHrPermission(self, user_id):
+    #     modelPermission = ModelPermission(user_id)
+    #     modelPermission.delete_permissions_on(OrganizationEmployee, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD))
+    #     modelPermission.delete_permissions_on(Organization, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD))
+    #     modelPermission.delete_permissions_on(Role, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD))
+    #     modelPermission.delete_permissions_on(EmployeeCareerLog, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD))
+        
+    # def managerPermission(self, user_id):
+    #     modelPermission = ModelPermission(user_id)
+    #     modelPermission.clear_all_permissions()
+    #     modelPermission.add_permissions_on(OrganizationEmployee, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD, PermissionType.DELETE))
+    #     modelPermission.add_permissions_on(Organization, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD, PermissionType.DELETE))
+    #     modelPermission.add_permissions_on(Role, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD, PermissionType.DELETE))
+    #     modelPermission.add_permissions_on(EmployeeCareerLog, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD, PermissionType.DELETE))
+        
+    # def removeManagerPermission(self, user_id):
+    #     modelPermission = ModelPermission(user_id)
+    #     modelPermission.delete_permissions_on(OrganizationEmployee, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD, PermissionType.DELETE))
+    #     modelPermission.delete_permissions_on(Organization, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD, PermissionType.DELETE))
+    #     modelPermission.delete_permissions_on(Role, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD, PermissionType.DELETE))
+    #     modelPermission.delete_permissions_on(EmployeeCareerLog, (PermissionType.VIEW, PermissionType.CHANGE, PermissionType.ADD, PermissionType.DELETE))

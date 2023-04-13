@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from e_commerce import settings
+from e_commerce import views as ecommerce_views
 from helpers.defaults import Defaults
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -41,6 +42,10 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('login/', ecommerce_views.login, name='login'),
+    path('logout/', ecommerce_views.logout, name='logout'),
+    path('', ecommerce_views.home, name='home'),
+    path('register/', ecommerce_views.register, name='register'),
     path('api/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('api/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -48,7 +53,6 @@ urlpatterns = [
 
 urlpatterns += [
     path('sales/', include('sales.urls')),
-    path('', include('sales.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('crm/', include('crm.urls')),
     path('sales/', include('sales.urls'))
