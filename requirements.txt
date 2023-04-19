@@ -1,5 +1,6 @@
 asgiref==3.6.0
 autopep8==2.0.2
+beautifulsoup4==4.11.2
 CacheControl==0.12.11
 cachetools==5.3.0
 certifi==2022.12.7
@@ -9,11 +10,14 @@ coreapi==2.3.3
 coreschema==0.0.4
 cryptography==39.0.2
 Django==4.1.7
+django-appconf==1.0.5
+django-bootstrap4==22.3
 django-cors-headers==3.14.0
 django-filter==22.1
 django-rest-swagger==2.2.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
+drf-yasg==1.21.5
 firebase-admin==6.1.0
 google-api-core==2.11.0
 google-api-python-client==2.80.0
@@ -29,6 +33,7 @@ grpcio==1.51.3
 grpcio-status==1.51.3
 httplib2==0.21.0
 idna==3.4
+inflection==0.5.1
 itypes==1.2.0
 Jinja2==3.1.2
 MarkupSafe==2.1.2
@@ -58,9 +63,12 @@ pytz==2022.7.1
 PyYAML==6.0
 requests==2.28.2
 rsa==4.9
+ruamel.yaml==0.17.21
+ruamel.yaml.clib==0.2.7
 shellescape==3.8.1
 simplejson==3.18.3
 six==1.16.0
+soupsieve==2.4
 sqlparse==0.4.3
 tenacity==8.2.2
 toml==0.10.2
