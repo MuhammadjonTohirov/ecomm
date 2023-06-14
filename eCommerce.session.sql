@@ -1,1 +1,1 @@
-select * from wms_discount
+select * from wms_productcore_image

@@ -3,7 +3,6 @@ from crm.models.User import User
 from helpers import enum
 from helpers.enum import Vat
 from wms.models.stock_point import StockPoint3
-from wms.models.Image import Image
 from wms.models.product_core import ProductCore
 from django.db import models
 

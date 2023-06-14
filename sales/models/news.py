@@ -11,8 +11,8 @@ class News(BaseModel):
     title = models.CharField(verbose_name='Title', max_length=512)
     description = models.CharField(verbose_name='Description', max_length=1024)
     is_visible = models.BooleanField(verbose_name='Is visible', default=True)
-    image = models.CharField(
-        verbose_name='Image url', max_length=512, null=True, blank=False, default=None)
+    image = models.ImageField(verbose_name='Image',
+                              upload_to='images/news/', blank=True, null=True)
     related_products = models.ManyToManyField(
         wms_models.StockProduct, blank=True)
     related_companies = models.ManyToManyField(

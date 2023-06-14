@@ -2,11 +2,11 @@
 from django.contrib import admin
 from crm.admin.base_admin_model import BaseAdminModel
 from wms.models.folder import Folder
+from wms.models.product_core_images import ProductCoreImage
 from wms.models.product_field import ProductField
 from wms.models.field_type import FieldType
 from wms.models.Discount import Discount
 from wms.models.product_category import ProductCategory
-from wms.models.Image import Image
 from wms.models.product_core import ProductCore
 from django.utils.html import format_html
 import socket
@@ -21,6 +21,14 @@ class ProductFieldInline(admin.TabularInline):
     fields = ('title', 'value', 'visible', 'product_field_type')
     fk_name = 'product'
 
+class ProductCoreImageInline(admin.TabularInline):
+    model = ProductCoreImage
+    can_delete = True
+    verbose_name_plural = 'Image list'
+    extra: int = 1
+    max_num: int = 20
+    fields = ('image', 'sequence')
+    fk_name = 'product'
 
 @admin.register(FieldType)
 class FieldTypeAdmin(admin.ModelAdmin):
@@ -34,26 +42,13 @@ class FolderAdmin(admin.ModelAdmin):
     list_display = ('title', )
 
 
-@admin.register(Image)
-class Images(admin.ModelAdmin):
-    model = Image
-    list_display = ('id', 'image', )
-
-
 @admin.register(ProductCore)
 class ProductCoreAdmin(admin.ModelAdmin):
-    inlines = (ProductFieldInline, )
+    inlines = (ProductFieldInline, ProductCoreImageInline, )
     search_fields = ('title', 'id', 'bar_qr_code')
-    list_display = ('title', 'product_image', 'id', 'bar_qr_code')
+    list_display = ('title', 'image', 'id', 'bar_qr_code')
     list_filter = ('title', 'bar_qr_code')
-    filter_horizontal = ('image', 'categories')
-
-    def product_image(self, obj: ProductCore):
-        return format_html("""<img src='http://{host}:8000{url}' width='100' height='100'
-                                style = 'object-fit: contain;'
-                           />
-                           """.format(host=socket.gethostbyname(socket.gethostname()), url=obj.image.first().image.url))
-
+    filter_horizontal = ('categories', )
 
 @admin.register(ProductCategory)
 class ProductCategoryAdmin(admin.ModelAdmin):

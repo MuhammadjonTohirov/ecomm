@@ -2,7 +2,6 @@ from rest_framework import serializers
 from crm.serializers import OrganizationAddressSerializer, OrganizationSerializer
 from helpers.methods import Methods
 from wms.models.stock_point import StockPoint3
-from wms.models.Image import Image
 from wms.models.product_core import ProductCore
 
 from wms.models.product_unit import ProductUnit
@@ -18,12 +17,6 @@ class ProductCoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductCore
         fields = ('id', 'categories', 'color', 'image', 'title', 'bar_qr_code', 'unit', 'description',)
-
-class ImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Image
-        fields = ('id', 'image',)
-
 
 class StockPointSerializer(serializers.ModelSerializer):
     belongs_to = OrganizationSerializer(many=False)
