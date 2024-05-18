@@ -2,7 +2,7 @@ from django.db import models
 
 
 class StockProductExtraFields(models.Model):
-    product = models.ForeignKey(verbose_name='StockProduct', to='StockProduct', on_delete=models.CASCADE,
+    product = models.ForeignKey(verbose_name='StockInProduct', to='StockInProduct', on_delete=models.CASCADE,
                                 null=True, blank=False, related_name='stock_product_extra_fields')
     title = models.CharField(
         verbose_name='Title', max_length=128, default=None, blank=False, null=True)

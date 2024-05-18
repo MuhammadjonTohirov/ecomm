@@ -14,7 +14,7 @@ class News(BaseModel):
     image = models.ImageField(verbose_name='Image',
                               upload_to='images/news/', blank=True, null=True)
     related_products = models.ManyToManyField(
-        wms_models.StockProduct, blank=True)
+        wms_models.StockInProduct, blank=True)
     related_companies = models.ManyToManyField(
         crm.models.organization.Organization, blank=True)
 

@@ -11,7 +11,7 @@ class Order(BaseModel):
     cart = models.ForeignKey(
         Cart, on_delete=models.DO_NOTHING, null=True, default=None, blank=False)
     product = models.ForeignKey(
-        wms_models.StockProduct, on_delete=models.DO_NOTHING, null=True)
+        wms_models.StockInProduct, on_delete=models.DO_NOTHING, null=True)
     count = models.IntegerField(default=0)
     user = models.ForeignKey(
         crm_models.User, on_delete=models.DO_NOTHING, null=True)

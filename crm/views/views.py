@@ -9,6 +9,7 @@ from rest_framework.serializers import Serializer
 from rest_framework.utils import json
 from crm.models.organization import Organization
 from crm.models.User import User
+from crm.helpers.organization_employee_helper import OrganizationEmployeeHelper
 
 from helpers.defaults import CrmDefaults
 from helpers.responses import AppResponse
@@ -19,7 +20,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
 from crm.models.models import AppConfig, Person, Bank, Address, File
-from crm.serializers import AppConfigSerializer, BankSerializer, OrganizationSerializer
+from crm.serializers import AppConfigSerializer, BankSerializer, OrganizationSerializer, OrganizationSmallSerializer, PersonSerializer
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -78,15 +79,44 @@ class FileViewSet(viewsets.ViewSet):
 
 
 class OrganizationViewSet(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated, ]
+    # permission_classes = [IsAuthenticated, ]
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
 
     @action(methods=['GET'], detail=False)
-    def all(self, request, pk=None):
-        s = self.serializer_class(self.queryset, many=True)
-        return Response(AppResponse(s.data).body())
+    def organization_list(self, request):
+        qs = self.serializer_class(self.queryset, many=True)
+
+        if request.user.is_superuser:
+            s = self.serializer_class(self.queryset, many=True)
+            return Response(AppResponse(s.data).body())
+
+        if (value := OrganizationEmployeeHelper.get_active_organizations(request.user)).exists():
+            return Response(AppResponse(self.serializer_class(value, many=True).data).body())
+
+        return Response(AppResponse('You are not related any organizations').error_body())
 
     @action(methods=['POST'], detail=False)
     def add(self, request, pk=None):
         return Response()
+
+@api_view(['POST'])
+@permission_classes([AllowAny, ])
+def search_clients(request):
+    organization_id = request.data.get('organization_id', None)
+    search = request.data.get('search', None)
+    
+    if not organization_id:
+        return Response(AppResponse('Organization id is required').error_body())
+    
+    if not search:
+        return Response(AppResponse('Search is required').error_body())
+    
+    # search by username, first_name, last_name
+    persons = Person.objects.filter(user__username__icontains=search) \
+        | Person.objects.filter(user__first_name__icontains=search) \
+        | Person.objects.filter(user__last_name__icontains=search)
+    # limit upto 100
+    persons = persons[:100]
+    serializer = PersonSerializer(persons, many=True, context={'organization_id': organization_id})
+    return Response(AppResponse(serializer.data).body())

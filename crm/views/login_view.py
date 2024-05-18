@@ -12,6 +12,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 import datetime
 
+
 @swagger_auto_schema(
     method='post',
     request_body=openapi.Schema(
@@ -40,15 +41,16 @@ def login_view(request):
     password = request.data.get('password')
     response = Response()
     if (username is None) or (password is None):
-        raise exceptions.AuthenticationFailed(AppResponse('Username and password required', True).error_body())
-
+        raise exceptions.AuthenticationFailed(AppResponse(
+            'Username and password required', True).error_body())
 
     user = User.objects.filter(username=username).first()
-    if(user is None):
-        raise exceptions.AuthenticationFailed(AppResponse('User not found', True).error_body())
+    if (user is None):
+        raise exceptions.AuthenticationFailed(
+            AppResponse('User not found', True).error_body())
     if (not user.check_password(password)):
-        raise exceptions.AuthenticationFailed(AppResponse('Wrong password', True).error_body())
-
+        raise exceptions.AuthenticationFailed(
+            AppResponse('Wrong password', True).error_body())
 
     serialized_user = UserSerializer(user).data
 

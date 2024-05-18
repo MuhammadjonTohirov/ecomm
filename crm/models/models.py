@@ -114,7 +114,13 @@ class Person(BaseModel):
                                 related_name='person_user', null=True, blank=True, default=None, unique=True)
     is_business = models.BooleanField(
         verbose_name='Is business', default=False)
-
+    avatar = models.ImageField( # validators should be a list
+        verbose_name='Avatar', upload_to='person_avatar', null=True, blank=True, default=None)
+    phone_number = models.CharField( # validators should be a list 
+        verbose_name='Phone number', max_length=17, blank=True, null=True, default=None)
+    email = models.EmailField(verbose_name='Email', max_length=128, blank=True, null=True, default=None)
+    address = models.CharField(verbose_name='Address', max_length=512, blank=True, null=True, default=None)
+    
     def __str__(self):
         return f'{self.user.__str__()} {self.user.first_name} {self.user.last_name}'
 

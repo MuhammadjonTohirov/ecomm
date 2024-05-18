@@ -1,4 +1,6 @@
 from django.db import models
+# import BaseModel
+from crm.models.base_model import BaseModel
 
 
 class ProductUnit(models.Model):
@@ -9,3 +11,9 @@ class ProductUnit(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = 'Base Product unit'
+        verbose_name_plural = 'Base Product units'
+        db_table = 'wms_productunit'
+        ordering = ['title']

@@ -20,4 +20,6 @@ urlpatterns += [
     path('api/token/refresh/', views_auth.new_token, name='token_refresh'),
     path('api/token/verify/', views_auth.verify_token, name='token_verify'),
     path('app/config', views.get_config),
+    # search_clients
+    path('api/search_clients', views.search_clients),
 ]

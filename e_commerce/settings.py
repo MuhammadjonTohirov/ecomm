@@ -27,8 +27,8 @@ REFRESH_TOKEN_SECRET = 'xp_hpnflm()c@m#c0hhgl(#!tg(6&d3jd5%y($ta-q0dfged=y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.69', 'localhost', '192.168.1.139',
-                 '127.0.0.1', '0.0.0.0', '192.168.1.64']
+ALLOWED_HOSTS = ['192.168.1.69', 'localhost', '192.168.1.139', '192.168.1.126',
+                 '127.0.0.1', '0.0.0.0', '192.168.1.64', '192.168.1.2']
 # 192.168.1.68
 # Application definition
 
@@ -57,17 +57,16 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-        'crm.authentication.SafeJWTAuthentication',
-
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        # 'crm.authentication.SafeJWTAuthentication',
     ],
 
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'crm.authentication.SafeJWTAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
@@ -93,6 +92,16 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.1.139:8000",
     "http://192.168.1.69:8000",
 ]
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+}
 
 # CORS_ALLOW_METHODS = [
 #     "DELETE",
@@ -232,7 +241,8 @@ STATIC_URL = '/static/'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static/theme2")] #, os.path.join(BASE_DIR, "static/theme1")
+# , os.path.join(BASE_DIR, "static/theme1")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static/theme2")]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 

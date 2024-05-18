@@ -5,6 +5,7 @@ from sales.models.cart import Cart
 from sales.models.news import News
 from sales.models.order import Order
 from sales.models.order_state import OrderState
+from sales.models.trade import TradeSession
 
 
 @admin.register(OrderState)
@@ -38,6 +39,7 @@ class CartAdmin(BaseAdminModel):
             Order.objects.filter(cart=cart).delete()
             cart.delete()
 
+
 @admin.register(Order)
 class OrderAdmin(BaseAdminModel):
     model = Order
@@ -53,10 +55,11 @@ class OrderAdmin(BaseAdminModel):
         for cart in queryset:
             cart.delete()
 
+
 @admin.register(News)
 class NewsAdmin(BaseAdminModel):
     model = News
-    list_display = ('title', 'description', 'is_visible',
+    list_display = ('title',  'description', 'is_visible',
                     'image', 'created_date', 'updated_date',)
     list_filter = ('is_visible',)
     search_fields = ('title', 'description',)

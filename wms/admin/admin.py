@@ -8,6 +8,9 @@ from wms.models.field_type import FieldType
 from wms.models.Discount import Discount
 from wms.models.product_category import ProductCategory
 from wms.models.product_core import ProductCore
+from wms.models.product_unit import ProductUnit
+# import ProductUnitConverter
+from wms.models.product_unit_converter import ProductUnitConverter
 from django.utils.html import format_html
 import socket
 
@@ -21,6 +24,7 @@ class ProductFieldInline(admin.TabularInline):
     fields = ('title', 'value', 'visible', 'product_field_type')
     fk_name = 'product'
 
+
 class ProductCoreImageInline(admin.TabularInline):
     model = ProductCoreImage
     can_delete = True
@@ -29,6 +33,7 @@ class ProductCoreImageInline(admin.TabularInline):
     max_num: int = 20
     fields = ('image', 'sequence')
     fk_name = 'product'
+
 
 @admin.register(FieldType)
 class FieldTypeAdmin(admin.ModelAdmin):
@@ -50,6 +55,7 @@ class ProductCoreAdmin(admin.ModelAdmin):
     list_filter = ('title', 'bar_qr_code')
     filter_horizontal = ('categories', )
 
+
 @admin.register(ProductCategory)
 class ProductCategoryAdmin(admin.ModelAdmin):
     list_display = ('title', 'id', 'description', 'image')
@@ -69,6 +75,18 @@ class DiscountAdmin(BaseAdminModel):
     def is_valid(self, obj):
         return obj.is_valid()
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(created_by=request.user.id)
+
+
+@admin.register(ProductUnit)
+class ProductUnitAdmin(admin.ModelAdmin):
+    list_display = ('title', 'id', 'description')
+
+    # valid for only admin
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser:

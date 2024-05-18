@@ -16,6 +16,9 @@ class OrganizationEmployee(BaseModel):
                             default=None, db_index=True, verbose_name='Username')
     organization = models.ForeignKey('Organization',
                                      related_name='memberships', on_delete=models.CASCADE)
+
+    assigned_stock_point = models.ForeignKey(
+        'wms.StockPoint3', on_delete=models.SET_NULL, null=True, default=None, blank=True)
     roles = models.ManyToManyField('Role')
 
     class Meta:

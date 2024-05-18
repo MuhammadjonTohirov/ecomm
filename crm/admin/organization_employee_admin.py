@@ -75,12 +75,12 @@ class OrganizationEmployeeForm(forms.ModelForm):
 @admin.register(OrganizationEmployee)
 class OrganizationEmployeeAdmin(BaseAdminModel):
     form = OrganizationEmployeeForm
-    list_display = ('user_object', 'organization',
+    list_display = ('user_object', 'organization', 'assigned_stock_point',
                     'roles_description')
     search_fields = ('user', 'organization__name')
 
     fieldsets = [('Organization Employee', {'fields': [
-                  'user', 'organization', 'roles']})] + BaseAdminModel.fieldsets
+                  'user', 'organization', 'assigned_stock_point', 'roles']})] + BaseAdminModel.fieldsets
 
     filter_horizontal = ('roles',)
 

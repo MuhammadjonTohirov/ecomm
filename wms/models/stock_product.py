@@ -1,3 +1,4 @@
+from crm.models.base_model import BaseModel
 from crm.models.organization import Organization
 from crm.models.User import User
 from helpers import enum
@@ -7,17 +8,28 @@ from wms.models.product_core import ProductCore
 from django.db import models
 
 
-class StockProduct(models.Model):
+class StockInProduct(models.Model):
     product = models.ForeignKey(
-        ProductCore, default=False, verbose_name='Product', null=False, on_delete=models.CASCADE)
+        ProductCore, default=None, verbose_name='Product', null=True, on_delete=models.CASCADE)
     stock_point = models.ForeignKey(
         StockPoint3, on_delete=models.SET_NULL, null=True, blank=True, default=None, name="stock_point")
     reason = models.CharField(
         verbose_name='Income reason', max_length=1024, blank=True, null=True)
     from_organization = models.ForeignKey(
         Organization, on_delete=models.DO_NOTHING, null=True, blank=True, default=None, verbose_name='Origin')
-    count = models.PositiveIntegerField(
+
+    # put editable to false
+    count = models.FloatField(
         verbose_name='Quantity', null=True, blank=True, default=None)
+
+#   set hint to actual_quantity
+    actual_quantity = models.FloatField(
+        verbose_name='Actual quantity', null=True, blank=True, default=None, editable=True,
+        help_text='Leave empty if you want to set it equal to quantity')
+
+    custom_barcode = models.CharField(
+        verbose_name='Custom barcode', max_length=128, blank=True, null=True, default=None)
+
     income_price = models.FloatField(
         verbose_name='Income price', blank=True, default=None, null=True)
     whole_price = models.FloatField(
@@ -56,9 +68,35 @@ class StockProduct(models.Model):
         verbose_name = 'Product income transaction'
         verbose_name_plural = 'Product income transactions'
         unique_together = ('product', 'session')
+        # table_name
+        db_table = 'products_in_stock'
 
     def __str__(self):
         return f'{self.product} {self.session}'
 
     def save(self):
-        super(StockProduct, self).save()
+        super(StockInProduct, self).save()
+
+
+class MergedProductsInStock(BaseModel):
+    product = models.ForeignKey(
+        ProductCore, default=None, verbose_name='Product', null=True,
+        on_delete=models.CASCADE, blank=False)
+    stock_point = models.ForeignKey(
+        StockPoint3, on_delete=models.SET_NULL, null=True, blank=False, default=None, name="stock_point")
+    total_quantity = models.FloatField(
+        verbose_name='Total quantity', null=True, blank=False, default=0)
+    actual_quantity = models.FloatField(
+        verbose_name='Actual quantity', null=True, blank=False, default=0)
+    transactions = models.TextField(verbose_name='Transactions', null=False, blank=False, default='[]', editable=True,
+                                    help_text='JSON array of transactions')
+    
+    # unique with
+    class Meta:
+        verbose_name = 'My products'
+        verbose_name_plural = 'My products list'
+        unique_together = ('product', 'stock_point')
+        # table_name
+        db_table = 'merged_products_in_stock'
+
+    

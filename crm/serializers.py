@@ -1,16 +1,45 @@
 from django.utils import timezone
+from pyparsing import empty
 from rest_framework import serializers
+from rest_framework.fields import empty
 from crm.models.organization import Organization
 from crm.models.User import User
-
-from crm.models.models import AppConfig, OrganizationAddress, Bank, Address, Region
-
+from crm.models.models import AppConfig, OrganizationAddress, Bank, Address, Person, Region
+from crm.models.client import Client
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email',
                   'first_name', 'last_name', 'is_active']
+
+class ClientSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Client
+        fields = ('cashback', 'balance', 'points')
+        
+class PersonSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    
+    def __init__(self, instance=None, data=..., **kwargs):
+        super().__init__(instance, data, **kwargs)
+        self.context['request'] = kwargs.get('context', None).get('request', None)
+    
+    class Meta:
+        model = Person
+        fields = ('id', 'user', 'is_business', 'avatar', 'phone_number', 'email', 'address')
+        
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        org_id = self.context['organization_id']
+        client = Client.objects.filter(user=instance, organization=org_id).first()
+        if client is None:
+            org = Organization.objects.get(id=org_id)
+            client = Client.objects.create(user=instance, organization=org)
+        
+        data['account'] = ClientSerializer(client).data
+        return data
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -50,8 +79,8 @@ class BankSerializer(serializers.ModelSerializer):
 class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
-        fields = ('id', 'name', 'description', 'logo', 'bannerImage', 'tint_color',
-                  'organization_type', 'bank', 'belongs_to')
+        fields = ('id', 'name', 'description', 'logo', 'banner_image', 'tint_color',
+                  'organization_type', 'bank', 'owner')
 
     def create(self, validated_data):
         name = validated_data.get('name')
@@ -67,11 +96,28 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
         return user
 
-    def to_representation(self, instance):
+    def to_representation(self, instance: Organization):
         data = super().to_representation(instance)
 
         data['address'] = OrganizationAddressSerializer(
-            instance.organization_address, many=False).data
+            instance.address, many=False).data
+        return data
+
+
+class OrganizationSmallSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Organization
+        fields = ('id', 'name', 'description', 'logo', 'banner_image', 'tint_color',
+                  'organization_type')
+        
+    def create(self, validated_data):
+        raise NotImplementedError()
+
+    def to_representation(self, instance: Organization):
+        data = super().to_representation(instance)
+
+        data['address'] = OrganizationAddressSerializer(
+            instance.address, many=False).data
         return data
 
 

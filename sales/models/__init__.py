@@ -1,3 +1,3 @@
-from . import cart, news, order, order_state
+from . import cart, news, order, order_state, trade
 
-__all__ = ['cart', 'news', 'order', 'order_state']
+__all__ = ['cart', 'news', 'order', 'order_state', 'trade']

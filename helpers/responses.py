@@ -14,5 +14,6 @@ class AppResponse:
 
     def error_body(self):
         return {
-            'error': self.message
+            'error': self.message,
+            'code': 500
         }

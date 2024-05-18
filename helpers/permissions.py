@@ -11,7 +11,7 @@ from wms.models.Color import Color
 from wms.models.Discount import Discount
 from wms.models.product_core import ProductCore
 from wms.models.stock_point import StockPoint3
-from wms.models.stock_product import StockProduct
+from wms.models.stock_product import StockInProduct
 from wms.models.StockProductExtraFields import StockProductExtraFields
 from wms.models.StockProductImage import StockProductImage
 
@@ -145,7 +145,7 @@ class PermissionManager:
 
         modelPermission.view(ProductCore)
 
-        crudFor(StockProduct)
+        crudFor(StockInProduct)
         crudFor(StockPoint3)
         crudFor(StockProductExtraFields)
         crudFor(StockProductImage)

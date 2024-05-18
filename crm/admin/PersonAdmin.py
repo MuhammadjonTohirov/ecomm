@@ -1,6 +1,7 @@
 from django import forms
 from crm.admin.base_admin_model import BaseAdminModel
 from crm.models.User import User
+from crm.models.client import Client
 from crm.models.models import Person
 from django.utils.safestring import mark_safe
 
@@ -35,7 +36,32 @@ class PersonAdmin(BaseAdminModel):
     form = PersonForm
     list_display = ('user', 'created_date', 'updated_date')
     fieldsets = [
-        ('Person', {'fields': ['user', 'is_business']})] + BaseAdminModel.fieldsets
+        ('Person', {'fields': ['user', 'is_business', 'avatar', 'phone_number', 'email', 'address']})] + BaseAdminModel.fieldsets
+
+    def id(self):
+        return self.user.id
+
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+
+        if self.id == request.user.id:
+            return True
+
+        return False
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+
+        return qs.filter(user=request.user)
+
+@admin.register(Client)
+class ClientAdmin(BaseAdminModel):
+    list_display = ('user', 'created_date', 'updated_date')
+    fieldsets = [
+        ('Client', {'fields': ['user', 'organization', 'cashback', 'balance']})] + BaseAdminModel.fieldsets
 
     def id(self):
         return self.user.id

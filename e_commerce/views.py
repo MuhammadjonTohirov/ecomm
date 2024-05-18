@@ -64,8 +64,9 @@ def register(request):
 def home(request):
     card_page_icon = "/assets/img/icons/icon_group.svg"
     card_page = 'new/components/card_info.html'
-    card_page_info = {'title': 'Total employee', 'details': 10, 'meta': 'HR', 'icon': card_page_icon}
-    
+    card_page_info = {'title': 'Total employee',
+                      'details': 10, 'meta': 'HR', 'icon': card_page_icon}
+
     home = HomePageFactory.create_home_page().to_json()
 
     context = {'register': 'register', 'login': 'login',

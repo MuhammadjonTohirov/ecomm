@@ -1,6 +1,6 @@
 from django.db import models
 from crm.models.base_model import BaseModel
-from wms.models.stock_product import StockProduct
+from wms.models.stock_product import StockInProduct
 # import timezone
 from django.utils import timezone
 

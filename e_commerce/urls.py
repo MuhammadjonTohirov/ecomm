@@ -55,6 +55,7 @@ urlpatterns += [
     path('sales/', include('sales.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('crm/', include('crm.urls')),
+    path('wms/', include('wms.urls')),
     path('sales/', include('sales.urls'))
 ]
 
