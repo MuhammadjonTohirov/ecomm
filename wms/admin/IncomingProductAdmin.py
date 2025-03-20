@@ -8,7 +8,6 @@ from wms.models.StockProductImage import StockProductImage
 # import ProductUnitConverter
 from wms.models.product_unit_converter import ProductUnitConverter
 
-
 class StockProductExtraFieldsInline(admin.TabularInline):
     model = StockProductExtraFields
     can_delete = True

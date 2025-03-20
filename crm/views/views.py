@@ -25,6 +25,8 @@ from crm.serializers import AppConfigSerializer, BankSerializer, OrganizationSer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from utils.app_constants import ORGANIZATION_KEY
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, ])
@@ -103,7 +105,7 @@ class OrganizationViewSet(viewsets.ViewSet):
 @api_view(['POST'])
 @permission_classes([AllowAny, ])
 def search_clients(request):
-    organization_id = request.data.get('organization_id', None)
+    organization_id = request.data.get(ORGANIZATION_KEY, None)
     search = request.data.get('search', None)
     
     if not organization_id:

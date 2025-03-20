@@ -9,11 +9,29 @@ class AppResponse:
     def body(self):
         return {
             'data': self.message,
-            'code': 200
+            'code': 200 # ok
         }
 
     def error_body(self):
         return {
             'error': self.message,
-            'code': 500
+            'code': 500 # internal server error
+        }
+    
+    def access_denied(self):
+        return {
+            'error': self.message,
+            'code': 403 # forbidden
+        }
+    
+    def not_found(self):
+        return {
+            'error': self.message,
+            'code': 404 # not found
+        }
+
+    def bad_request(self):
+        return {
+            'error': self.message,
+            'code': 400 # bad request
         }

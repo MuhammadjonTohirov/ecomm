@@ -7,7 +7,6 @@ from sales.models.order import Order
 from sales.models.order_state import OrderState
 from sales.models.trade import TradeSession
 
-
 @admin.register(OrderState)
 class OrderStateAdmin(BaseAdminModel):
     model = OrderState

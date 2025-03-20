@@ -23,13 +23,6 @@ class LoginRequiredMiddleware:
         # Finally, return the response
         return response
 
-
-def index(request):
-    # set payload register url to context
-    context = {'register': 'register', 'login': 'login'}
-    return render(request, 'new/home/home.html', context=context)
-
-
 def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -64,11 +57,15 @@ def register(request):
 def home(request):
     card_page_icon = "/assets/img/icons/icon_group.svg"
     card_page = 'new/components/card_info.html'
-    card_page_info = {'title': 'Total employee',
-                      'details': 10, 'meta': 'HR', 'icon': card_page_icon}
+    card_page_info = {
+        'title': 'Total employee',
+        'details': 10, 
+        'meta': 'HR', 
+        'icon': card_page_icon
+        }
 
     home = HomePageFactory.create_home_page().to_json()
 
     context = {'register': 'register', 'login': 'login',
                'card_page': card_page, 'card_page_context': card_page_info, 'content': home}
-    return render(request, 'new/home/home.html', context=context)
+    return render(request, 'eui/main/dashboard.html', context=context)

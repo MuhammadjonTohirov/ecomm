@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from crm.serializers import OrganizationAddressSerializer, OrganizationSerializer
+from helpers.enum import PaymentMethod
 from helpers.methods import Methods
 from wms.models.stock_point import StockPoint3
-from wms.models.stock_product import StockInProduct
+from wms.models.stock_product import MergedProductsInStock, StockInProduct
 from wms.models.product_core import ProductCore
 
 from wms.models.product_unit import ProductUnit
@@ -61,3 +62,33 @@ class StockPointDefaultSerializer(serializers.ModelSerializer):
         model = StockPoint3
         fields = ('id', 'title', 'assigned_director',
                   'description', 'address', 'belongs_to')
+
+
+class InventorySerializer(serializers.ModelSerializer):
+    # product
+    product = ProductCoresSerializer(many=False)
+    class Meta:
+        model = MergedProductsInStock
+        fields = ('id', 'product', 'stock_point', 'actual_quantity', 'total_quantity', 'transactions')
+
+class StockInProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StockInProduct
+        fields = ('id', 
+                  'product', 
+                  'count', 
+                  'custom_barcode',
+                  'actual_quantity', 
+                  'income_price',
+                  'whole_price', 
+                  'single_price', 
+                  'session',
+                  'discount',
+                  'currency',
+                  'payment_method',
+                  'markup',
+                  'session',
+                  'vat',
+                  'created_date',
+                  'updated_date'
+                  )

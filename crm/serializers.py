@@ -6,6 +6,7 @@ from crm.models.organization import Organization
 from crm.models.User import User
 from crm.models.models import AppConfig, OrganizationAddress, Bank, Address, Person, Region
 from crm.models.client import Client
+from utils.app_constants import ORGANIZATION_KEY
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,7 +33,7 @@ class PersonSerializer(serializers.ModelSerializer):
         
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        org_id = self.context['organization_id']
+        org_id = self.context[ORGANIZATION_KEY]
         client = Client.objects.filter(user=instance, organization=org_id).first()
         if client is None:
             org = Organization.objects.get(id=org_id)

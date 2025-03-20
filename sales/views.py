@@ -147,11 +147,13 @@ def products_at_stockpoint(request):
     import json
     stock_point_id = request.data.get('stock_point_id', None)
     search = request.data.get('search', None)
+    size = request.data.get('size', 25)
+    page = request.data.get('page', 0)
     
     if stock_point_id is None:
         return Response(AppResponse('stock_point_id is required').error_body())
 
-    product_list = MergedProductsInStock.objects.filter(stock_point__id=stock_point_id)\
+    product_list = MergedProductsInStock.objects.filter(stock_point__id=stock_point_id)
     
     if search is not None:
         product_list = product_list.filter(product__title__icontains=search) \
@@ -171,7 +173,9 @@ def products_at_stockpoint(request):
     
     # flat map products_in_stock
     actual_products_in_stock = [product for products in products_in_stock for product in products]
-
+    # use pagination (page and size)
+    actual_products_in_stock = actual_products_in_stock[(page * size):((page+1) * size)]
+    
     serializer = ProductSerializer(actual_products_in_stock, many=True)
     return Response(AppResponse(serializer.data).body())
 

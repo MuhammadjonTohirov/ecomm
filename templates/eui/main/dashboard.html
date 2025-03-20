@@ -1,0 +1,87 @@
+{% extends "eui/layouts/base.html" %}
+
+{% block title %}Dashboard - Business Management System{% endblock %}
+
+{% block content %}
+<h1 class="page-header">Dashboard</h1>
+
+<p class="welcome-text fs-5">Welcome, {{ user.username }}! Select a module to get started:</p>
+
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+    <!-- CRM Module Card -->
+    <div class="col">
+        <div class="card module-card h-100">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="module-icon crm-icon">
+                        <i class="bi bi-people fs-3 text-white"></i>
+                    </div>
+                    <h5 class="card-title mb-0 fw-semibold">CRM</h5>
+                </div>
+                <p class="card-text text-muted mb-4">Manage customers, organizations, employees and contacts.</p>
+                <a href="#" class="btn btn-primary btn-module btn-crm">Enter CRM</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- WMS Module Card -->
+    <div class="col">
+        <div class="card module-card h-100">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="module-icon wms-icon">
+                        <i class="bi bi-box-seam fs-3 text-white"></i>
+                    </div>
+                    <h5 class="card-title mb-0 fw-semibold">WMS</h5>
+                </div>
+                <p class="card-text text-muted mb-4">Manage inventory, products, stock locations and movements.</p>
+                <a href="#" class="btn btn-success btn-module btn-wms">Enter WMS</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sales Module Card -->
+    <div class="col">
+        <div class="card module-card h-100">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="module-icon sales-icon">
+                        <i class="bi bi-cart3 fs-3 text-white"></i>
+                    </div>
+                    <h5 class="card-title mb-0 fw-semibold">Sales</h5>
+                </div>
+                <p class="card-text text-muted mb-4">Manage orders, invoices, and sales transactions.</p>
+                <a href="#" class="btn btn-danger btn-module btn-sales">Enter Sales</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats Row -->
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="stats-card">
+            <h6 class="stats-header">
+                <i class="bi bi-people me-2"></i>Total Customers
+            </h6>
+            <p class="stats-value crm-value">{{ customer_count|default:"0" }}</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card">
+            <h6 class="stats-header">
+                <i class="bi bi-box-seam me-2"></i>Products in Stock
+            </h6>
+            <p class="stats-value wms-value">{{ product_count|default:"0" }}</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card">
+            <h6 class="stats-header">
+                <i class="bi bi-graph-up me-2"></i>Recent Sales
+            </h6>
+            <p class="stats-value sales-value">{{ recent_sales_count|default:"0" }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

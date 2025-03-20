@@ -28,7 +28,7 @@ REFRESH_TOKEN_SECRET = 'xp_hpnflm()c@m#c0hhgl(#!tg(6&d3jd5%y($ta-q0dfged=y'
 DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.69', 'localhost', '192.168.1.139', '192.168.1.126',
-                 '127.0.0.1', '0.0.0.0', '192.168.1.64', '192.168.1.2']
+                 '127.0.0.1', '0.0.0.0', '192.168.1.64', '192.168.1.2', '*']
 # 192.168.1.68
 # Application definition
 
