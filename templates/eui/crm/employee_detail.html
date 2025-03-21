@@ -1,0 +1,378 @@
+{% extends "eui/crm/base_layout.html" %}
+
+{% block title %}Employee Details - Business Management System{% endblock %}
+
+{% block dashboard_css %}
+<style>
+    .employee-profile {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: #2a9d8f;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        font-weight: 600;
+        margin-right: 20px;
+    }
+    
+    .employee-name {
+        font-size: 24px;
+        font-weight: 600;
+        color: #566a7f;
+        margin-bottom: 5px;
+    }
+    
+    .employee-id {
+        color: #999;
+        font-size: 14px;
+    }
+    
+    .info-section {
+        margin-bottom: 30px;
+    }
+    
+    .info-title {
+        font-weight: 600;
+        color: #566a7f;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .info-item {
+        margin-bottom: 15px;
+    }
+    
+    .info-label {
+        color: #999;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    
+    .info-value {
+        font-weight: 500;
+        color: #566a7f;
+    }
+    
+    .role-badge {
+        background-color: #4361ee;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 30px;
+        font-weight: 500;
+        font-size: 14px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        display: inline-block;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    
+    .activity-section {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        padding: 30px;
+    }
+    
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+    
+    .timeline:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 7px;
+        height: 100%;
+        width: 2px;
+        background-color: #e9ecef;
+    }
+    
+    .timeline-item {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    
+    .timeline-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .timeline-dot {
+        position: absolute;
+        left: -30px;
+        top: 0;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: #4361ee;
+    }
+    
+    .timeline-date {
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 5px;
+    }
+    
+    .timeline-content {
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    .card-permissions {
+        margin-top: 20px;
+    }
+    
+    .permission-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .permission-icon {
+        margin-right: 10px;
+        color: #4361ee;
+    }
+</style>
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-header mb-0">Employee Details</h1>
+    <a href="{% url 'crm_dashboard' %}" class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+    </a>
+</div>
+
+<div class="employee-profile">
+    <div class="profile-header">
+        <div class="avatar">
+            {% if user and user.person_user and user.person_user.avatar %}
+                <img src="{{ user.person_user.avatar.url }}" alt="{{ user.first_name }} {{ user.last_name }}">
+            {% else %}
+                {% if user %}
+                    {{ user.first_name|first }}{{ user.last_name|first }}
+                {% else %}
+                    {{ employee.user|first }}
+                {% endif %}
+            {% endif %}
+        </div>
+        <div>
+            <h2 class="employee-name">
+                {% if user %}
+                    {{ user.first_name }} {{ user.last_name }}
+                {% else %}
+                    {{ employee.user }}
+                {% endif %}
+            </h2>
+            <div class="employee-id">Employee ID: {{ employee.id }}</div>
+            <div>
+                {% for role in roles %}
+                    <span class="badge bg-primary me-1">{{ role.title }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="info-section">
+                <h5 class="info-title">Basic Information</h5>
+                
+                <div class="info-item">
+                    <div class="info-label">Username</div>
+                    <div class="info-value">{{ employee.user }}</div>
+                </div>
+                
+                {% if user %}
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">{{ user.email|default:"Not provided" }}</div>
+                </div>
+                {% endif %}
+                
+                {% if user and user.person_user %}
+                <div class="info-item">
+                    <div class="info-label">Phone Number</div>
+                    <div class="info-value">{{ user.person_user.phone_number|default:"Not provided" }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Address</div>
+                    <div class="info-value">{{ user.person_user.address|default:"Not provided" }}</div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="info-section">
+                <h5 class="info-title">Work Information</h5>
+                
+                <div class="info-item">
+                    <div class="info-label">Organization</div>
+                    <div class="info-value">{{ employee.organization.name }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="info-value">
+                        {% if employee.is_working %}
+                            <span class="badge bg-success">Active</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactive</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Assigned Stock Point</div>
+                    <div class="info-value">
+                        {% if employee.assigned_stock_point %}
+                            {{ employee.assigned_stock_point.title }}
+                        {% else %}
+                            Not assigned
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Roles</div>
+                    <div class="info-value">
+                        {% for role in roles %}
+                            <span class="role-badge">{{ role.title }}</span>
+                        {% empty %}
+                            No roles assigned
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="info-section">
+                <h5 class="info-title">Permissions</h5>
+                
+                <div class="card card-permissions">
+                    <div class="card-body">
+                        {% if roles %}
+                            {% for role in roles %}
+                                <div class="mb-3">
+                                    <h6>{{ role.title }} Permissions</h6>
+                                    
+                                    <div class="permission-item">
+                                        <i class="bi bi-eye permission-icon"></i>
+                                        <span>View Organization</span>
+                                    </div>
+                                    
+                                    {% if role.title == 'DIRECTOR' or role.title == 'MANAGER' or role.title == 'HR' %}
+                                    <div class="permission-item">
+                                        <i class="bi bi-pencil permission-icon"></i>
+                                        <span>Edit Organization</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <div class="permission-item">
+                                        <i class="bi bi-eye permission-icon"></i>
+                                        <span>View Clients</span>
+                                    </div>
+                                    
+                                    {% if role.title == 'DIRECTOR' or role.title == 'MANAGER' %}
+                                    <div class="permission-item">
+                                        <i class="bi bi-plus-circle permission-icon"></i>
+                                        <span>Add Clients</span>
+                                    </div>
+                                    
+                                    <div class="permission-item">
+                                        <i class="bi bi-pencil permission-icon"></i>
+                                        <span>Edit Clients</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if role.title == 'DIRECTOR' %}
+                                    <div class="permission-item">
+                                        <i class="bi bi-trash permission-icon"></i>
+                                        <span>Delete Clients</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-3">
+                                <i class="bi bi-exclamation-circle" style="font-size: 24px; color: #999;"></i>
+                                <p class="mt-2">No roles assigned to this employee</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-primary">
+                    <i class="bi bi-pencil me-2"></i>Edit Employee
+                </button>
+                <button class="btn btn-success">
+                    <i class="bi bi-shield-check me-2"></i>Manage Roles
+                </button>
+                <button class="btn btn-danger">
+                    <i class="bi bi-trash me-2"></i>Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="activity-section">
+    <h5 class="info-title">Recent Activity</h5>
+    
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">Today, 10:30 AM</div>
+            <div class="timeline-content">
+                <strong>Login</strong>
+                <p>Employee logged into the system</p>
+            </div>
+        </div>
+        
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">Yesterday, 2:45 PM</div>
+            <div class="timeline-content">
+                <strong>Client Added</strong>
+                <p>Added a new client: John Doe</p>
+            </div>
+        </div>
+        
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">Yesterday, 11:20 AM</div>
+            <div class="timeline-content">
+                <strong>Role Updated</strong>
+                <p>Role updated from Staff to Manager</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

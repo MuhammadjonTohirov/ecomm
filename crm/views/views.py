@@ -20,7 +20,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
 from crm.models.models import AppConfig, Person, Bank, Address, File
-from crm.serializers import AppConfigSerializer, BankSerializer, OrganizationSerializer, OrganizationSmallSerializer, PersonSerializer
+from crm.serializers.serializers import AppConfigSerializer, BankSerializer, OrganizationSerializer, OrganizationSmallSerializer, PersonSerializer
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView

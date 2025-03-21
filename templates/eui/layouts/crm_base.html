@@ -1,0 +1,102 @@
+{% extends "eui/layouts/base.html" %}
+
+{% block extra_css %}
+<style>
+    .crm-sidebar .nav-link {
+        color: #566a7f;
+        transition: all 0.3s;
+    }
+    
+    .crm-sidebar .nav-link:hover {
+        background-color: rgba(67, 97, 238, 0.1);
+        color: #4361ee;
+    }
+    
+    .crm-sidebar .nav-link.active {
+        background-color: #4361ee;
+        color: white;
+    }
+    
+    .crm-sidebar .nav-header {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #999;
+        padding: 12px 16px 0;
+        margin-top: 10px;
+    }
+    
+    .crm-content {
+        padding: 20px;
+    }
+</style>
+{% block dashboard_css %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 d-md-block sidebar collapse crm-sidebar">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link {% if active_submenu == 'dashboard' %}active{% endif %}" href="{% url 'crm_dashboard' %}">
+                        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                    </a>
+                </li>
+                
+                <li class="nav-header">Organizations</li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_submenu == 'organizations' %}active{% endif %}" href="#">
+                        <i class="bi bi-building me-2"></i> Organizations
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_submenu == 'branches' %}active{% endif %}" href="#">
+                        <i class="bi bi-diagram-3 me-2"></i> Branches
+                    </a>
+                </li>
+                
+                <li class="nav-header">Customers</li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_submenu == 'clients' %}active{% endif %}" href="#">
+                        <i class="bi bi-people me-2"></i> Clients
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_submenu == 'groups' %}active{% endif %}" href="#">
+                        <i class="bi bi-collection me-2"></i> Client Groups
+                    </a>
+                </li>
+                
+                <li class="nav-header">Employees</li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_submenu == 'employees' %}active{% endif %}" href="#">
+                        <i class="bi bi-person-badge me-2"></i> Employees
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_submenu == 'roles' %}active{% endif %}" href="#">
+                        <i class="bi bi-shield-check me-2"></i> Roles
+                    </a>
+                </li>
+                
+                <li class="nav-header">Settings</li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_submenu == 'settings' %}active{% endif %}" href="#">
+                        <i class="bi bi-gear me-2"></i> Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_submenu == 'integrations' %}active{% endif %}" href="#">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> Integrations
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 crm-content">
+            {% block dashboard_content %}{% endblock %}
+        </main>
+    </div>
+</div>
+{% endblock %}

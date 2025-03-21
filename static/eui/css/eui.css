@@ -1,0 +1,156 @@
+:root {
+    --primary-color: #4361ee;
+    --secondary-color: #3f37c9;
+    --success-color: #2a9d8f;
+    --danger-color: #e63946;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-radius: 10px;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f7fe;
+}
+
+.navbar {
+    background-color: var(--primary-color) !important;
+    box-shadow: var(--box-shadow);
+}
+
+.sidebar {
+    background-color: white;
+    box-shadow: var(--box-shadow);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    padding-top: 20px;
+}
+
+.sidebar .nav-link {
+    border-radius: 8px;
+    margin: 8px 16px;
+    padding: 10px 15px;
+    color: #566a7f;
+    transition: all 0.3s;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: var(--primary-color);
+}
+
+.sidebar .nav-link.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.sidebar .nav-link i {
+    margin-right: 10px;
+}
+
+.module-card {
+    border: none;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+}
+
+.module-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    margin-right: 20px;
+}
+
+.crm-icon {
+    background-color: #4361ee;
+}
+
+.wms-icon {
+    background-color: #2a9d8f;
+}
+
+.sales-icon {
+    background-color: #e63946;
+}
+
+.stats-card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+    height: 100%;
+}
+
+.stats-header {
+    font-size: 16px;
+    color: #566a7f;
+    margin-bottom: 15px;
+}
+
+.stats-value {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.crm-value {
+    color: var(--primary-color);
+}
+
+.wms-value {
+    color: var(--success-color);
+}
+
+.sales-value {
+    color: var(--danger-color);
+}
+
+.btn-module {
+    padding: 8px 16px;
+    font-weight: 500;
+    border-radius: 8px;
+}
+
+.btn-crm {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-wms {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-sales {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+.page-header {
+    color: #566a7f;
+    font-weight: 600;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.welcome-text {
+    color: #566a7f;
+    margin-bottom: 30px;
+}
+
+.login-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -33,12 +33,12 @@ def login(request):
             return redirect('/')
         else:
             # Return an 'invalid login' error message.
-            return render(request, 'new/home/login.html', context={'error': 'Error in login or password', 'register': 'register', 'login': 'login'})
+            return render(request, 'eui/account/login.html', context={'error': 'Error in login or password', 'register': 'register', 'login': 'login'})
     else:
         if request.user.is_authenticated:
             return redirect('/')
         context = {'register': 'register', 'login': 'login'}
-        return render(request, 'new/home/login.html', context=context)
+        return render(request, 'eui/account/login.html', context=context)
 
 
 def logout(request):

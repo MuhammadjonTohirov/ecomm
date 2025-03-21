@@ -6,6 +6,7 @@ from crm.models.organization import Organization
 from crm.models.User import User
 from crm.models.models import AppConfig, OrganizationAddress, Bank, Address, Person, Region
 from crm.models.client import Client
+from crm.models.employee import OrganizationEmployee
 from utils.app_constants import ORGANIZATION_KEY
 
 class UserSerializer(serializers.ModelSerializer):
@@ -33,13 +34,14 @@ class PersonSerializer(serializers.ModelSerializer):
         
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        org_id = self.context[ORGANIZATION_KEY]
-        client = Client.objects.filter(user=instance, organization=org_id).first()
-        if client is None:
-            org = Organization.objects.get(id=org_id)
-            client = Client.objects.create(user=instance, organization=org)
-        
-        data['account'] = ClientSerializer(client).data
+        org_id = self.context.get(ORGANIZATION_KEY)
+        if org_id:
+            client = Client.objects.filter(user=instance, organization=org_id).first()
+            if client is None:
+                org = Organization.objects.get(id=org_id)
+                client = Client.objects.create(user=instance, organization=org)
+            
+            data['account'] = ClientSerializer(client).data
         return data
 
 
@@ -120,6 +122,36 @@ class OrganizationSmallSerializer(serializers.ModelSerializer):
         data['address'] = OrganizationAddressSerializer(
             instance.address, many=False).data
         return data
+
+
+class UserBasicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'first_name', 'last_name', 'email']
+
+
+class OrganizationEmployeeSerializer(serializers.ModelSerializer):
+    roles_list = serializers.SerializerMethodField()
+    user_details = serializers.SerializerMethodField()
+    is_working_now = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = OrganizationEmployee
+        fields = ['id', 'user', 'organization', 'assigned_stock_point', 
+                  'roles_list', 'user_details', 'is_working_now']
+    
+    def get_roles_list(self, obj):
+        return [{'id': role.id, 'title': role.title} for role in obj.roles.all()]
+    
+    def get_user_details(self, obj):
+        try:
+            user = User.objects.get(username=obj.user)
+            return UserBasicSerializer(user).data
+        except User.DoesNotExist:
+            return None
+    
+    def get_is_working_now(self, obj):
+        return obj.is_working()
 
 
 class AppConfigSerializer(serializers.ModelSerializer):

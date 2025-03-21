@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from crm.serializers import OrganizationAddressSerializer, OrganizationSerializer
+from crm.serializers.serializers import OrganizationAddressSerializer, OrganizationSerializer
 from helpers.enum import PaymentMethod
 from helpers.methods import Methods
 from wms.models.stock_point import StockPoint3

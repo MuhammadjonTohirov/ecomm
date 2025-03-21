@@ -242,7 +242,7 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
 # , os.path.join(BASE_DIR, "static/theme1")
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static/theme2")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static/eui")]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 

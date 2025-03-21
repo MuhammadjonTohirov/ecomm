@@ -1,7 +1,13 @@
 {% extends "eui/layouts/base.html" %}
 
-{% block title %}Dashboard - Business Management System{% endblock %}
+{% load static %}
 
+{% block title %}Dashboard - Business Management System{% endblock %}
+{% comment %} extrahead block implementation {% endcomment %}
+{% block extrahead %} 
+    {% comment %} use eui.css with version query to clear cache {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/eui.css' %}?v=1">
+{% endblock %}
 {% block content %}
 <h1 class="page-header">Dashboard</h1>
 

@@ -1,4 +1,4 @@
-from crm.serializers import UserSerializer
+from crm.serializers.serializers import UserSerializer
 from crm.utils.utils import generate_access_token, generate_refresh_token
 from helpers.responses import AppResponse
 
