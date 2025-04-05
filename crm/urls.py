@@ -4,6 +4,14 @@ from rest_framework import routers
 from crm.views import views, views_auth, login_view
 from crm.views.dashboard_view import crm_dashboard, get_organizations, get_clients, get_employees, client_detail, employee_detail
 from rest_framework_simplejwt import views as jwt_views
+from crm.views.salary_attendance_views import (
+    check_in,
+    check_out,
+    get_attendance_report,
+    set_employee_salary,
+    get_current_salary,
+    calculate_salary_period
+)
 
 router = routers.DefaultRouter()
 
@@ -20,6 +28,16 @@ urlpatterns = [
     path('api/organizations/', get_organizations, name='get_organizations'),
     path('api/clients/', get_clients, name='get_clients'),
     path('api/employees/', get_employees, name='get_employees'),
+    
+    # Attendance endpoints
+    path('api/attendance/check-in/', check_in, name='employee_check_in'),
+    path('api/attendance/check-out/', check_out, name='employee_check_out'),
+    path('api/attendance/report/', get_attendance_report, name='attendance_report'),
+    
+    # Salary endpoints
+    path('api/salary/set/', set_employee_salary, name='set_employee_salary'),
+    path('api/salary/current/', get_current_salary, name='get_current_salary'),
+    path('api/salary/calculate/', calculate_salary_period, name='calculate_salary_period'),
 ]
 
 urlpatterns += [

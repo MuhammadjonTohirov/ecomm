@@ -16,6 +16,8 @@ def crm_dashboard(request):
     """
     Render the CRM dashboard template
     """
+    if request.user is None or not request.user.is_authenticated:
+        return render(request, 'eui/others/404.html', {'message': 'User not authenticated'})
     organizations = OrganizationEmployeeHelper.get_active_organizations(request.user)
     organization_count = organizations.count()
     

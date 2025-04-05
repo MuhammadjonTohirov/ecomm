@@ -13,7 +13,7 @@
                     <p class="mb-0 opacity-75">Sign in to continue</p>
                 </div>
                 <div class="card-body p-4">
-                    <form method="post">
+                    <form method="post" id="loginForm">
                         {% csrf_token %}
                         <div class="form-group mb-4">
                             <label for="username" class="form-label text-muted fw-semibold mb-2">Username</label>
@@ -36,6 +36,7 @@
                         {% if error %}
                         <div class="alert alert-danger">{{ error }}</div>
                         {% endif %}
+                        <div id="loginError" class="alert alert-danger d-none"></div>
                         <button type="submit" class="btn btn-primary w-100 py-2 mt-3 fw-semibold">Sign In</button>
                     </form>
                 </div>
@@ -43,4 +44,6 @@
         </div>
     </div>
 </div>
+
+<script src="/static/eui/js/crm_login.js"></script>
 {% endblock %}

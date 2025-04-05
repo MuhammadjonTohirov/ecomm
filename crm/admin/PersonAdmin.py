@@ -4,12 +4,8 @@ from crm.models.User import User
 from crm.models.client import Client
 from crm.models.models import Person
 from django.utils.safestring import mark_safe
-
-
 from django.contrib import admin
-
 from django.contrib.auth.models import Permission
-
 
 class PersonForm(forms.ModelForm):
 
