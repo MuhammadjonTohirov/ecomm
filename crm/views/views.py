@@ -7,6 +7,7 @@ from django.shortcuts import render
 import jwt
 from rest_framework.serializers import Serializer
 from rest_framework.utils import json
+from crm.models.employee import OrganizationEmployee
 from crm.models.organization import Organization
 from crm.models.User import User
 from crm.helpers.organization_employee_helper import OrganizationEmployeeHelper
@@ -122,3 +123,16 @@ def search_clients(request):
     persons = persons[:100]
     serializer = PersonSerializer(persons, many=True, context={'organization_id': organization_id})
     return Response(AppResponse(serializer.data).body())
+
+def get_employees_by_organization(request):
+    organization_id = request.GET.get('organization_id')
+    employees = []
+    
+    if organization_id:
+        for employee in OrganizationEmployee.objects.filter(organization_id=organization_id):
+            employees.append({
+                'id': employee.id,
+                'name': str(employee)  # Ensure your OrganizationEmployee model has a good __str__ method
+            })
+    
+    return JsonResponse({'employees': employees})

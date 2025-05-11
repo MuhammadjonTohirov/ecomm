@@ -50,4 +50,5 @@ urlpatterns += [
     path('api/token/verify/', views_auth.verify_token, name='token_verify'),
     path('app/config', views.get_config),
     path('api/search_clients', views.search_clients),
+    path('api/get_employees_by_organization/', views.get_employees_by_organization, name='get_employees_by_organization'),
 ]

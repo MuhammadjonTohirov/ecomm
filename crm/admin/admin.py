@@ -8,7 +8,7 @@ from crm.models.employee import OrganizationEmployee
 
 from crm.models.models import *
 
-admin.site.site_header = "Admin panel"
+admin.site.site_header = "Admin Dashboard"
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
