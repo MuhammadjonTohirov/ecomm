@@ -40,14 +40,16 @@ class OrganizationEmployeeHelper:
 
     @staticmethod
     def create_employee(username: str, request: HttpRequest, organization, role: Role):
-        employee = OrganizationEmployee.objects.get(
-            user=username, organization=organization)
-        if employee is not None:
-            if not employee.roles.contains(role):
-                employee.roles.add(role)
-                employee.roles.update_date = datetime.now()
-                employee.save()
-            return
+        if OrganizationEmployee.objects.filter(
+                user=username, organization=organization).__len__() > 0:
+            employee = OrganizationEmployee.objects.get(
+                user=username, organization=organization)
+            if employee is not None:
+                if not employee.roles.contains(role):
+                    employee.roles.add(role)
+                    employee.roles.update_date = datetime.now()
+                    employee.save()
+                return
 
         employee = OrganizationEmployee.objects.update_or_create(
             user=username, organization=organization, created_by=request.user)[0]
