@@ -21,19 +21,7 @@ class EmployeeAttendanceForm(forms.ModelForm):
     class Meta:
         model = EmployeeAttendance
         fields = '__all__'
-        widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-            'check_in_time': forms.DateTimeInput(
-                attrs={'type': 'datetime-local'}, 
-                format='%Y-%m-%dT%H:%M'
-            ),
-            'check_out_time': forms.DateTimeInput(
-                attrs={'type': 'datetime-local'}, 
-                format='%Y-%m-%dT%H:%M'
-            ),
-            'notes': forms.Textarea(attrs={'rows': 3}),
-        }
-    
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
