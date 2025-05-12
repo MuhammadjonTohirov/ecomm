@@ -44,7 +44,6 @@ def crm_dashboard(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_organizations(request):
-    print('get_organizations')
     """
     API endpoint to get top 5 organizations for the current user
     """

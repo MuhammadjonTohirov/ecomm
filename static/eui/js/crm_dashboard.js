@@ -68,20 +68,49 @@ async function fetchOrganizations() {
 
 // Display organizations in the UI - now showing just top 5
 function displayOrganizations(organizations) {
-    const container = document.getElementById('organizations-list');
-    container.innerHTML = '';
-    console.log('Displaying organizations:', organizations, container);
-    // Update section title to reflect we're showing top 5
-    document.getElementById('organizations-header').textContent = 'Your Top 5 Organizations';
+    console.log("Displaying organizations:", organizations);
     
+    const container = document.getElementById('organizations-list');
+    console.log("Container element:", container);
+    
+    if (!container) {
+        console.error("Could not find organizations-list element!");
+        return;
+    }
+    
+    // Check if we have valid data
+    if (!Array.isArray(organizations) || organizations.length === 0) {
+        console.warn("No organizations data to display");
+        displayNoOrganizations();
+        return;
+    }
+    
+    // Clear the container
+    container.innerHTML = '';
+    
+    // Update header if it exists
+    const header = document.getElementById('organizations-header');
+    if (header) {
+        header.textContent = "Your Top 5 Organizations";
+    }
+    
+    // Loop through and create organization cards
     organizations.forEach(org => {
+        console.log("Processing organization:", org);
+        
+        // Check if org has the expected properties
+        if (!org.id || !org.name) {
+            console.warn("Organization missing required properties:", org);
+            return; // Skip this org
+        }
+        
         const col = document.createElement('div');
         col.className = 'col-md-4 col-lg-3';
         
         const logoUrl = org.logo ? org.logo : '';
         const tintColor = org.tint_color ? org.tint_color : '#4361ee';
         
-        col.innerHTML = ```
+        col.innerHTML = `
             <div class="card organization-card" data-id="${org.id}" onclick="selectOrganization(${org.id}, '${org.name}')">
                 <div class="card-body d-flex flex-column align-items-center text-center p-4">
                     <div class="organization-logo mb-3" style="background-color: ${tintColor}20; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px;">
@@ -93,10 +122,12 @@ function displayOrganizations(organizations) {
                     <p class="card-text text-muted small">${org.organization_type === 1 ? 'Organization' : 'Person'}</p>
                 </div>
             </div>
-        ```;
+        `;
         
         container.appendChild(col);
     });
+    
+    console.log("Finished displaying organizations");
 }
 // Display a message when no organizations are found
 function displayNoOrganizations() {
@@ -114,6 +145,10 @@ function displayNoOrganizations() {
 
 // Handle organization selection
 function selectOrganization(orgId, orgName) {
+    if (orgId === currentOrganizationId) {
+        console.log('Organization already selected:', orgId, orgName);
+        return; // No need to re-fetch if already selected
+    }
     // Highlight the selected organization card
     console.log('Selected organization:', orgId, orgName);
     document.querySelectorAll('.organization-card').forEach(card => {
