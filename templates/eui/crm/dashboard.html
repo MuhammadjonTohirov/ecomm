@@ -21,14 +21,6 @@
     </div>
     
     <div class="col-md-3">
-        <div class="card-counter crm-warning">
-            <i class="bi bi-people"></i>
-            <span class="count-numbers">{{ client_count }}</span>
-            <span class="count-name">Clients</span>
-        </div>
-    </div>
-    
-    <div class="col-md-3">
         <div class="card-counter crm-success">
             <i class="bi bi-person-badge"></i>
             <span class="count-numbers">{{ employee_count }}</span>
@@ -60,48 +52,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Clients Section -->
-<div class="client-section">
-    <div class="section-header">
-        <h5>Clients</h5>
-        <button class="btn btn-sm btn-primary" id="btn-add-client" disabled>
-            <i class="bi bi-plus-circle me-1"></i>Add Client
-        </button>
-    </div>
-    
-    <div class="search-box">
-        <i class="bi bi-search"></i>
-        <input type="text" class="form-control search-input" id="client-search" placeholder="Search clients..." disabled>
-    </div>
-    
-    <div class="table-wrapper">
-        <table class="table table-striped table-hover">
-            <thead class="table-light">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Phone</th>
-                    <th scope="col">Balance</th>
-                    <th scope="col">Cashback</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="clients-list">
-                <!-- Clients will be loaded here via JavaScript -->
-                <tr>
-                    <td colspan="7">
-                        <div class="empty-state">
-                            <i class="bi bi-people"></i>
-                            <h5>Please select an organization to view clients</h5>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 </div>
 

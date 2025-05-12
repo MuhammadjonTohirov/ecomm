@@ -161,89 +161,12 @@ function selectOrganization(orgId, orgName) {
     currentOrganizationId = orgId;
     
     // Update UI elements
-    document.getElementById('btn-add-client').disabled = false;
     document.getElementById('btn-add-employee').disabled = false;
-    document.getElementById('client-search').disabled = false;
     document.getElementById('employee-search').disabled = false;
     
-    // Fetch clients and employees for the selected organization
-    fetchClients(orgId);
+    // Fetch employees for the selected organization
     fetchEmployees(orgId);
 }
-
-// Fetch clients for the selected organization
-async function fetchClients(orgId) {
-    document.getElementById('clients-list').innerHTML = `
-        <tr>
-            <td colspan="7" class="text-center">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </td>
-        </tr>
-    `;
-    
-    try {
-        const data = await fetchApi(`/crm/api/clients/?organization_id=${orgId}`);
-        
-        if (data.data && data.data.length > 0) {
-            displayClients(data.data);
-        } else {
-            displayNoClients();
-        }
-    } catch (error) {
-        displayNoClients();
-    }
-}
-
-// Display clients in the UI
-function displayClients(clients) {
-    const container = document.getElementById('clients-list');
-    container.innerHTML = '';
-    
-    clients.forEach((client, index) => {
-        const row = document.createElement('tr');
-        
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${client.user.first_name} ${client.user.last_name}</td>
-            <td>${client.user.email || '-'}</td>
-            <td>${client.phone_number || '-'}</td>
-            <td>${client.account ? client.account.balance : '0.00'}</td>
-            <td>${client.account ? client.account.cashback : '0.00'}</td>
-            <td>
-                <a href="/crm/clients/${client.id}/" class="btn btn-sm btn-outline-primary me-1">
-                    <i class="bi bi-eye"></i>
-                </a>
-                <button class="btn btn-sm btn-outline-success me-1" onclick="editClient(${client.id})">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger" onclick="deleteClient(${client.id})">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </td>
-        `;
-        
-        container.appendChild(row);
-    });
-}
-
-// Display a message when no clients are found
-function displayNoClients() {
-    const container = document.getElementById('clients-list');
-    container.innerHTML = `
-        <tr>
-            <td colspan="7">
-                <div class="empty-state">
-                    <i class="bi bi-people"></i>
-                    <h5>No clients found</h5>
-                    <p>This organization doesn't have any clients yet.</p>
-                </div>
-            </td>
-        </tr>
-    `;
-}
-
 // Fetch employees for the selected organization
 async function fetchEmployees(orgId) {
     document.getElementById('employees-list').innerHTML = `
@@ -321,19 +244,6 @@ function displayNoEmployees() {
     `;
 }
 
-// Client action handlers
-function editClient(clientId) {
-    // Placeholder for edit client functionality
-    alert(`Edit client with ID ${clientId}`);
-}
-
-function deleteClient(clientId) {
-    // Placeholder for delete client functionality
-    if (confirm(`Are you sure you want to delete client with ID ${clientId}?`)) {
-        alert('Client deletion would happen here');
-    }
-}
-
 // Employee action handlers
 function editEmployee(employeeId) {
     // Placeholder for edit employee functionality
@@ -349,18 +259,6 @@ function deleteEmployee(employeeId) {
 
 // Handle filter logic for search inputs
 function setupSearchHandlers() {
-    // Handle client search
-    document.getElementById('client-search').addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
-        const rows = document.querySelectorAll('#clients-list tr');
-        
-        rows.forEach(row => {
-            if (row.querySelector('td.empty-state-cell')) return;
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(searchTerm) ? '' : 'none';
-        });
-    });
-    
     // Handle employee search
     document.getElementById('employee-search').addEventListener('input', function(e) {
         const searchTerm = e.target.value.toLowerCase();
@@ -375,18 +273,7 @@ function setupSearchHandlers() {
 }
 
 // Button action handlers
-function setupButtonHandlers() {
-    // Add client button click handler
-    document.getElementById('btn-add-client').addEventListener('click', function() {
-        if (!currentOrganizationId) {
-            alert('Please select an organization first');
-            return;
-        }
-        
-        // Redirect to client creation page or show a modal
-        window.location.href = `/crm/clients/add/?organization_id=${currentOrganizationId}`;
-    });
-    
+function setupButtonHandlers() {    
     // Add employee button click handler
     document.getElementById('btn-add-employee').addEventListener('click', function() {
         if (!currentOrganizationId) {
@@ -395,7 +282,7 @@ function setupButtonHandlers() {
         }
         
         // Redirect to employee creation page or show a modal
-        window.location.href = `/crm/employees/add/?organization_id=${currentOrganizationId}`;
+        window.location.href = `/admin/crm/organizationemployee/add/`;
     });
 }
 
