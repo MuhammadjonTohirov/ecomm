@@ -30,7 +30,7 @@ def login(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             django_login(request, user)
-            return redirect('/')
+            return redirect('/initializer/')
         else:
             # Return an 'invalid login' error message.
             return render(request, 'eui/account/login.html', context={'error': 'Error in login or password', 'register': 'register', 'login': 'login'})
@@ -69,3 +69,30 @@ def home(request):
     context = {'register': 'register', 'login': 'login',
                'card_page': card_page, 'card_page_context': card_page_info, 'content': home}
     return render(request, 'eui/main/dashboard.html', context=context)
+
+def initializer(request):
+    """
+    Initializer view that bridges session authentication with JWT.
+    Gets tokens for authenticated users and stores them in frontend storage
+    before redirecting to home.
+    """
+    if not request.user.is_authenticated:
+        return redirect('/login/')
+    
+    # Generate JWT tokens for the authenticated user
+    from crm.utils.utils import generate_access_token, generate_refresh_token
+    
+    user = request.user
+    access_token = generate_access_token(user)
+    refresh_token = generate_refresh_token(user)
+    
+    # Pass tokens to the template
+    context = {
+        'access_token': access_token,
+        'refresh_token': refresh_token,
+        'user_id': user.id,
+        'username': user.username,
+        'redirect_url': '/'  # Default redirect location
+    }
+    
+    return render(request, 'eui/initializer.html', context)

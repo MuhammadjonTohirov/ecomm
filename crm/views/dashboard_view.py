@@ -18,7 +18,9 @@ def crm_dashboard(request):
     """
     if request.user is None or not request.user.is_authenticated:
         return render(request, 'eui/others/404.html', {'message': 'User not authenticated'})
-    organizations = OrganizationEmployeeHelper.get_active_organizations(request.user)
+    
+    # Get top 5 organizations by created_date (most recent first)
+    organizations = OrganizationEmployeeHelper.get_active_organizations(request.user).order_by('-created_date')[:5]
     organization_count = organizations.count()
     
     # Get clients count across all organizations
@@ -33,22 +35,22 @@ def crm_dashboard(request):
         'active_module': 'crm',
         'organization_count': organization_count,
         'client_count': client_count,
-        'employee_count': employee_count
+        'employee_count': employee_count,
+        'organizations': organizations  # Pass organizations to template
     }
     
     return render(request, 'eui/crm/dashboard.html', context)
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_organizations(request):
+    print('get_organizations')
     """
-    API endpoint to get organizations for the current user
+    API endpoint to get top 5 organizations for the current user
     """
-    organizations = OrganizationEmployeeHelper.get_active_organizations(request.user)
+    organizations = OrganizationEmployeeHelper.get_active_organizations(request.user).order_by('-created_date')[:5]
     serializer = OrganizationSmallSerializer(organizations, many=True)
     return Response(AppResponse(serializer.data).body())
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

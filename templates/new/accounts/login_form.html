@@ -1,3 +1,19 @@
+<form id="loginForm" method="post">
+    {% csrf_token %}
+    <!-- Your existing form fields -->
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <div id="loginError" class="alert alert-danger d-none"></div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+
+<script>
 document.getElementById('loginForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -5,7 +21,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     const password = document.getElementById('password').value;
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     
-    // First, make a request to the JWT endpoint to get tokens
+    // First, get JWT tokens
     fetch('/crm/api/login/', {
         method: 'POST',
         headers: {
@@ -19,13 +35,8 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     })
     .then(response => response.json())
     .then(data => {
-        print('Response from JWT endpoint:', data);
-        // Check if the response contains tokens
-        if (data.data && data.data.access_token && data.data.refresh_token) {
-            print('Login successful, storing tokens in localStorage');
-            print('Access Token:', data.data.access_token);
-            print('Refresh Token:', data.data.refresh_token);
-            
+        if (data.data && data.data.access_token) {
+            // Store tokens in localStorage
             localStorage.setItem('access_token', data.data.access_token);
             localStorage.setItem('refresh_token', data.data.refresh_token);
             
@@ -33,26 +44,28 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
                 localStorage.setItem('token_expiry', data.data.expires_in);
             }
             
-            if (data.data.user) {
-                localStorage.setItem('user_info', JSON.stringify(data.data.user));
-            }
-            
-            // Then submit the form normally for session-based authentication
+            // Now also do traditional login for session-based auth
+            // This will allow both authentication methods to work
             const form = document.getElementById('loginForm');
             form.method = 'post';
+            form.action = '/login/';
             form.removeEventListener('submit', arguments.callee);
             form.submit();
-        } else if (data.error) {
-            // Show error message
+        } else {
+            // Show error
             const errorElement = document.getElementById('loginError');
-            errorElement.textContent = data.error;
+            errorElement.textContent = data.error || 'Login failed. Please check your credentials.';
             errorElement.classList.remove('d-none');
         }
     })
     .catch(error => {
         console.error('Login error:', error);
-        const errorElement = document.getElementById('loginError');
-        errorElement.textContent = 'An error occurred while trying to log in. Please try again.';
-        errorElement.classList.remove('d-none');
+        // If JWT login fails, try normal login as fallback
+        const form = document.getElementById('loginForm');
+        form.method = 'post';
+        form.action = '/login/';
+        form.removeEventListener('submit', arguments.callee);
+        form.submit();
     });
 });
+</script>

@@ -6,30 +6,32 @@
 let currentOrganizationId = null;
 
 // Execute API requests with JWT authentication
+// Execute API requests with JWT authentication or fallback to session auth
 async function fetchApi(url) {
     try {
-        // Get token from localStorage or wherever it's stored in your application
+        // Get token from localStorage
         const token = localStorage.getItem('access_token');
         
-        if (!token) {
-            console.error('No authentication token found');
-            throw new Error('Authentication required');
+        const headers = {
+            'Accept': 'application/json'
+        };
+        
+        // Add token if available
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
         }
         
         const response = await fetch(url, {
             method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json'
-            }
+            headers: headers,
+            // Include credentials for session-based auth as fallback
+            credentials: 'same-origin'
         });
         
         if (!response.ok) {
             // Check if token is expired
             if (response.status === 401) {
-                // Attempt to refresh token or redirect to login
-                window.location.href = '/login/';
-                return;
+                console.warn('Authentication issue. Might need to log in again.');
             }
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -43,12 +45,19 @@ async function fetchApi(url) {
 
 // Fetch organizations from the API
 async function fetchOrganizations() {
-    // print something on console
+    // print log to console
+    console.log('Fetching organizations...');
     try {
         const data = await fetchApi('/crm/api/organizations/');
         
+        console.log('Organizations fetched:', data, data.data);
         if (data.data && data.data.length > 0) {
             displayOrganizations(data.data);
+            
+            // Auto-select first organization if available
+            if (data.data.length > 0) {
+                selectOrganization(data.data[0].id, data.data[0].name);
+            }
         } else {
             displayNoOrganizations();
         }
@@ -57,10 +66,13 @@ async function fetchOrganizations() {
     }
 }
 
-// Display organizations in the UI
+// Display organizations in the UI - now showing just top 5
 function displayOrganizations(organizations) {
     const container = document.getElementById('organizations-list');
     container.innerHTML = '';
+    console.log('Displaying organizations:', organizations, container);
+    // Update section title to reflect we're showing top 5
+    document.getElementById('organizations-header').textContent = 'Your Top 5 Organizations';
     
     organizations.forEach(org => {
         const col = document.createElement('div');
@@ -69,7 +81,7 @@ function displayOrganizations(organizations) {
         const logoUrl = org.logo ? org.logo : '';
         const tintColor = org.tint_color ? org.tint_color : '#4361ee';
         
-        col.innerHTML = `
+        col.innerHTML = ```
             <div class="card organization-card" data-id="${org.id}" onclick="selectOrganization(${org.id}, '${org.name}')">
                 <div class="card-body d-flex flex-column align-items-center text-center p-4">
                     <div class="organization-logo mb-3" style="background-color: ${tintColor}20; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px;">
@@ -81,7 +93,7 @@ function displayOrganizations(organizations) {
                     <p class="card-text text-muted small">${org.organization_type === 1 ? 'Organization' : 'Person'}</p>
                 </div>
             </div>
-        `;
+        ```;
         
         container.appendChild(col);
     });
@@ -103,6 +115,7 @@ function displayNoOrganizations() {
 // Handle organization selection
 function selectOrganization(orgId, orgName) {
     // Highlight the selected organization card
+    console.log('Selected organization:', orgId, orgName);
     document.querySelectorAll('.organization-card').forEach(card => {
         card.classList.remove('border-primary');
     });

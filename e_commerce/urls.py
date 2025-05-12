@@ -43,6 +43,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', ecommerce_views.login, name='login'),
+    path('initializer/', ecommerce_views.initializer, name='initializer'),
     path('logout/', ecommerce_views.logout, name='logout'),
     path('', ecommerce_views.home, name='home'),
     path('register/', ecommerce_views.register, name='register'),

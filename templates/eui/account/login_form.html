@@ -1,0 +1,26 @@
+<form method="post" id="loginForm">
+    {% csrf_token %}
+    <div class="form-group mb-4">
+        <label for="username" class="form-label text-muted fw-semibold mb-2">Username</label>
+        <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-person text-muted"></i>
+            </span>
+            <input type="text" class="form-control bg-light border-start-0" id="username" name="username" placeholder="Enter your username" required>
+        </div>
+    </div>
+    <div class="form-group mb-4">
+        <label for="password" class="form-label text-muted fw-semibold mb-2">Password</label>
+        <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-lock text-muted"></i>
+            </span>
+            <input type="password" class="form-control bg-light border-start-0" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+    </div>
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    <div id="loginError" class="alert alert-danger d-none"></div>
+    <button type="submit" class="btn btn-primary w-100 py-2 mt-3 fw-semibold">Sign In</button>
+</form>
